@@ -1,0 +1,8 @@
+<div class="ios-permission-modal" *ngIf="showIOSPermissionPrompt">
+    <div class="modal-content">
+      <h3>Permission Required</h3>
+      <p>Please allow motion and orientation access for the best experience.</p>
+      <button (click)="grantIOSPermissions()">Allow Access</button>
+      <button (click)="showIOSPermissionPrompt = false">Cancel</button>
+    </div>
+  </div>

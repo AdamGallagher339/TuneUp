@@ -1,0 +1,17 @@
+<header>
+  <h1>🏍️ TuneUp Motorbike Safety</h1>
+</header>
+
+<main>
+  <app-firestore-test></app-firestore-test>
+
+  <div class="test-box">
+    <h3>Firebase Connection Test</h3>
+    <button (click)="testConnection()">Test Firestore</button>
+    <pre>{{ testResults | json }}</pre>
+  </div>
+</main>
+
+<footer>
+  <p>© 2023 TuneUp</p>
+</footer>
