@@ -57,7 +57,10 @@ export interface SensorData {
         <div class="data-row">
         <div class="data-item">
           <label>Speed:</label>
-          <span>{{ currentData?.speed ?? 0 | number:'1.1-1' }} km/h</span>
+          <span>{{ currentData?.speed ?? 0 | number:'1.1-1' }} m/s</span>
+          <small *ngIf="currentData?.speed === 0">(Stationary)</small>
+          <br>
+          <span>{{ getSpeedKmh() | number:'1.1-1' }}km/h</span>
           <small *ngIf="currentData?.speed === 0">(Stationary)</small>
         </div>
 
@@ -134,6 +137,10 @@ export class FirebaseTestComponent implements OnInit, OnDestroy {
     ).pipe(map(data => data[0] as SensorData));
 
     this.startLiveUpdates();
+  }
+
+  getSpeedKmh(): number {
+    return this.currentData?.speed ? this.currentData.speed * 3.6 : 0;
   }
 
   startLiveUpdates() {
