@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -13,15 +14,15 @@ export class LoginComponent {
   email = '';
   password = '';
   error = '';
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService, private router: Router) {}
 
   login() {
-    console.log('Trying to log in with:', this.email, this.password);
-  
     this.auth.login(this.email, this.password)
-      .then(user => console.log('✅ Logged in:', user))
+      .then(() => {
+        this.error = '';
+        this.router.navigate(['/dashboard']); // ✅ Redirect here
+      })
       .catch(err => {
-        console.error('❌ Login failed:', err);
         this.error = err.message;
       });
   }
