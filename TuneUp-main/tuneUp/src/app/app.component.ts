@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
-import { doc, getDoc } from 'firebase/firestore';
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 import { FirebaseTestComponent } from './components/firestore-test/firestore-test.component'; 
 import { CommonModule } from '@angular/common';
-
+import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
   imports: [
-    CommonModule   ,
+    CommonModule,
+    RouterModule,
     FirebaseTestComponent
   ],
   selector: 'app-root',
@@ -16,8 +17,11 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent {
   testResults: any;
-  
-  constructor(private firestore: Firestore) {}
+
+  constructor(
+    public router: Router,
+    private firestore: Firestore
+  ) {}
 
   async testConnection() {
     try {
