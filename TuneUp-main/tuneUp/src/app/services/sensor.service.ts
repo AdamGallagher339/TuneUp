@@ -22,7 +22,13 @@ interface SensorReading extends SensorData {
 @Injectable({ providedIn: 'root' })
 export class sensorService { 
   private readonly GRAVITY = 9.81;
-  public readonly isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent); 
+  public isIOS = false;
+
+  constructor() {
+    if (typeof navigator !== 'undefined') {
+      this.isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    }
+  }
   private db = getFirestore();
   private motionWatch: any;
   private orientationWatch: any;
