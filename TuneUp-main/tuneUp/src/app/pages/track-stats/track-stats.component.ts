@@ -116,9 +116,10 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   
 
+  // Initialize gauge after the view is rendered.
   public ngAfterViewInit() {
     am5.ready(() => {
-      // Create root element for the gauge
+      // Create root element
       this.root = am5.Root.new("chartdiv");
   
       // Set themes
@@ -154,38 +155,54 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
         renderer: this.axisRenderer
       }));
   
-      // Create an axis data item; this item holds the gauge pointer value.
+      // Create the axis data item and set its initial value to 0.
       this.axisDataItem = this.xAxis.makeDataItem({});
       this.axisDataItem.set("value", 0);
   
-      // Create the bullet (i.e. the gauge pointer) and attach it.
+      // Create bullet (the gauge pointer) and attach it.
       this.bullet = this.axisDataItem.set("bullet", am5xy.AxisBullet.new(this.root, {
         sprite: am5radar.ClockHand.new(this.root, {
           radius: am5.percent(99),
-          fill: am5.color(0xffffff),  // white pointer fill
-          stroke: am5.color(0xffffff) // white pointer stroke
+          fill: am5.color(0xffffff),
+          stroke: am5.color(0xffffff)
         })
       }));
   
-      // Create an axis range from the axis data item – this is the gauge bar.
+      // Create an axis range from the axis data item.
+      // Capture it in a variable so we can adjust its fill settings.
       const range = this.xAxis.createAxisRange(this.axisDataItem);
-      // Set the gauge bar (filled portion) to white with the desired opacity.
+      // Set the gauge bar (axis fill) to white, with appropriate opacity.
       range.get("axisFill").setAll({
         fill: am5.color(0xffffff),
         fillOpacity: 0.3,
         visible: true
       });
   
-      // Optionally, hide grid elements.
+      // Optionally, hide grid lines for a cleaner look.
       this.axisDataItem.get("grid").set("visible", false);
   
-      // Animate the chart appearance.
+      // Animate chart appearance.
       this.chart.appear(1000, 100);
   
-      // Remove the simulation code; now the gauge will be updated using live sensor data.
+      // ---- SIMULATION CODE (for testing) ----
+      // Simulate gauge pointer movement from 0 to 200 repeatedly.
+      let testValue = 0;
+      setInterval(() => {
+        if (testValue > 200) {
+          testValue = 0;
+        }
+        this.axisDataItem.animate({
+          key: "value",
+          to: testValue,
+          duration: 800,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+        testValue += 20;
+      }, 1000);
+      // ---- END SIMULATION CODE ----
+      
     });
   }
-  
   
 
   private updateSessionStats(data: SensorReading): void {
