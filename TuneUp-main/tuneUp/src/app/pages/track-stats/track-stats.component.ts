@@ -94,23 +94,27 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
         (data.acceleration.y || 0) ** 2 +
         (data.acceleration.z || 0) ** 2
       );
-      
-      if (this.isTracking && this.sessionStats) {
-        this.updateSessionStats(data);
-      }
-      
-      if (this.testActive && this.testStats && this.axisDataItem) {
-        // Instead of a random value, animate gauge pointer to currentSpeed.
+  
+      // Update the gauge pointer if it exists
+      if (this.axisDataItem) {
         this.axisDataItem.animate({
           key: "value",
           to: this.currentSpeed,
           duration: 800,
           easing: am5.ease.out(am5.ease.cubic)
         });
+      }
+  
+      // Additional code: update session and test logic if needed.
+      if (this.isTracking && this.sessionStats) {
+        this.updateSessionStats(data);
+      }
+      if (this.testActive && this.testStats) {
         this.handleTestLogic(data);
       }
     });
   }
+  
 
   public ngAfterViewInit() {
     am5.ready(() => {
