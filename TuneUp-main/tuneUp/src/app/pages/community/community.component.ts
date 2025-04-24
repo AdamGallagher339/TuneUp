@@ -2,13 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, deleteDoc, doc ,setDoc} from 'firebase/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { getAuth } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
-import { FriendService } from '../../services/friend.service';
 import { EventService } from '../../services/event.service';
 
 @Component({
@@ -29,14 +27,12 @@ export class CommunityComponent implements OnInit {
     title: '',
     description: '',
     location: '',
-    date: '',
-    invitedFriends: [] as string[]
+    date: ''
   };
 
   constructor(
     private auth: AuthService,
     private userService: UserService,
-    private friendService: FriendService,
     private eventService: EventService,
     private firestore: Firestore,
     private router: Router
@@ -56,17 +52,19 @@ export class CommunityComponent implements OnInit {
     const eventsRef = collection(this.firestore, 'events');
     const eventsQuery = query(eventsRef, orderBy('timestamp', 'desc'));
     getDocs(eventsQuery).then(snapshot => {
-      this.events = snapshot.docs.map(doc => doc.data());
+      this.events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     });
   }
 
-  sendFriendRequest(targetUserId: string) {
-    this.friendService.sendRequest(this.currentUserId, targetUserId)
-      .then(() => this.showToast('✅ Friend request sent'))
-      .catch(err => {
-        console.error(err);
-        this.showToast('❌ Failed to send request');
-      });
+  async deleteEvent(eventId: string) {
+    try {
+      await deleteDoc(doc(this.firestore, 'events', eventId));
+      this.showToast('✅ Event deleted');
+      this.loadEvents();
+    } catch (err) {
+      console.error('❌ Failed to delete event:', err);
+      this.showToast('❌ Could not delete event');
+    }
   }
 
   viewProfile(userId: string) {
@@ -83,29 +81,29 @@ export class CommunityComponent implements OnInit {
       this.showToast('Please fill all event fields');
       return;
     }
-  
+
     const auth = getAuth();
     const user = auth.currentUser;
-  
+
     if (!user) {
       this.showToast('You must be logged in to create events');
       return;
     }
-  
-    const eventDoc = doc(this.firestore, `users/${user.uid}/events`, Date.now().toString());
-  
+
+    const eventDoc = doc(this.firestore, 'events', Date.now().toString());
+
     const newEvent = {
       ...this.event,
       createdBy: user.uid,
       timestamp: new Date()
     };
-  
+
     try {
       await setDoc(eventDoc, newEvent);
       this.showToast('✅ Event created');
       this.creatingEvent = false;
-      this.event = { title: '', description: '', location: '', date: '', invitedFriends: [] };
-      this.loadEvents(); // Refresh feed
+      this.event = { title: '', description: '', location: '', date: '' };
+      this.loadEvents();
     } catch (err) {
       console.error('❌ Event creation error:', err);
       this.showToast('❌ Failed to create event');
