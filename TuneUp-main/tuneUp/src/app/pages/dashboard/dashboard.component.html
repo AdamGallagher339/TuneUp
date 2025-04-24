@@ -1,1 +1,14 @@
 <p>dashboard works!</p>
+<!-- pages/dashboard/dashboard.component.html -->
+<nav>
+    <button (click)="goBack()" *ngIf="showBackButton">← Back</button>
+    
+    <div class="tabs">
+      <a routerLink="/dashboard/track" routerLinkActive="active">Track</a>
+      <a routerLink="/dashboard/view" routerLinkActive="active">History</a>
+      <a routerLink="/dashboard/community" routerLinkActive="active">Community</a>
+      <a routerLink="/dashboard/settings" routerLinkActive="active">Settings</a>
+    </div>
+  </nav>
+  
+  <router-outlet></router-outlet>

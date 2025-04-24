@@ -12,7 +12,14 @@ import { environment } from './environments/environment';
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideFirebaseApp(() => {
+      try {
+        return initializeApp(environment.firebaseConfig);
+      } catch (error) {
+        console.error('Firebase initialization error:', error);
+        throw new Error('Invalid Firebase configuration'); // Proper error message
+      }
+    }),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth())
   ]

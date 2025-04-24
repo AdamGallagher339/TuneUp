@@ -3,8 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
-import { LoginComponent } from './login/login.component'; // Adjust the path if needed
-
+import { LoginComponent } from '../app/auth/login/login.component'; // Adjust the path if needed
+import { RouterModule } from '@angular/router';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AppComponent } from './app.component';
 import { sensorService } from './services/sensor.service'; // Fixed casing
 import { FirebaseTestComponent } from './components/firestore-test/firestore-test.component';
@@ -22,6 +23,7 @@ import { AppRoutingModule } from './app-routing.module';
     LoginComponent
   ],
   imports: [
+    RouterModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,

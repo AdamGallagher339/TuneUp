@@ -1,0 +1,17 @@
+<!-- auth/login/login.component.html -->
+<div class="auth-container">
+  <h2>{{ isLoginMode ? 'Login' : 'Register' }}</h2>
+  
+  <input type="email" [(ngModel)]="email" placeholder="Email">
+  <input type="password" [(ngModel)]="password" placeholder="Password">
+  
+  <button (click)="isLoginMode ? login() : register()">
+    {{ isLoginMode ? 'Login' : 'Register' }}
+  </button>
+  
+  <p class="toggle-mode" (click)="isLoginMode = !isLoginMode">
+    {{ isLoginMode ? 'Create new account' : 'Already have an account?' }}
+  </p>
+  
+  <div class="error" *ngIf="error">{{ error }}</div>
+</div>

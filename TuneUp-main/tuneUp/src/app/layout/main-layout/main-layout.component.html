@@ -1,0 +1,15 @@
+<!-- layouts/main-layout/main-layout.component.html -->
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<nav class="bottom-nav">
+  <a 
+    *ngFor="let link of navLinks" 
+    [routerLink]="link.path" 
+    routerLinkActive="active"
+  >
+    <span class="icon">{{ link.icon }}</span>
+    <span class="label">{{ link.label }}</span>
+  </a>
+</nav>

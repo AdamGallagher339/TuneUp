@@ -1,6 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
 import { sensorService } from './sensor.service';
+import { describe,beforeEach,it, } from 'node:test';
+import {expect, jest, test} from '@jest/globals';
+
 
 describe('sensorService', () => {
   let service: sensorService;
