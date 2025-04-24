@@ -1,62 +1,124 @@
-/* Session controls: Align buttons horizontally */
+/* Reset & base */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background-color: black;
+}
+
+/* Fullscreen tinted background */
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 120px;
+
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.6),
+      rgba(0, 0, 0, 0.6)
+    ),
+    url('https://image.fonwall.ru/o/ts/aprilia-red-theme-wallpaper-racing-bike-motorcycles-and-bicycles.jpeg?auto=compress&fit=crop&w=2560&h=1440&domain=img3.fonwall.ru') no-repeat center center;
+  background-size: cover;
+  background-attachment: fixed;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+
+/* Shared card styling */
+.live-data,
+.session-stats,
+.test-popup .test-content {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 2rem;
+  color: white;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Buttons */
+button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  margin: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.session-button {
+  background-color: #3f51b5;
+  color: white;
+}
+
+.session-button:hover {
+  background-color: #2c3e9e;
+}
+
+.test-button {
+  background-color: #e91e63;
+  color: white;
+}
+
+.test-button:disabled {
+  background-color: #9c2751;
+  opacity: 0.6;
+}
+
+.end-test-button {
+  background-color: #ff5722;
+  color: white;
+}
+
+.save-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.discard-button {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Grouped controls */
 .session-controls {
-    display: flex;
-    gap: 10px; /* Space between buttons */
-    margin-bottom: 15px;
-  }
-  
-  .session-button,
-  .test-button {
-    padding: 10px 15px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
-  }
-  
-  .session-button:hover,
-  .test-button:hover {
-    transform: scale(1.05);
-  }
-  
-  .test-popup {
-    position: fixed;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -20%);
-    background-color: #fff;
-    border: 2px solid #000;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
-  }
-  
-  .test-content {
-    text-align: center;
-  }
-  
-  .test-actions {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-  }
-  
-  .save-button,
-  .discard-button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .save-button:hover {
-    background-color: green;
-    color: white;
-  }
-  
-  .discard-button:hover {
-    background-color: red;
-    color: white;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+/* Pop-up styles */
+.test-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.test-popup .test-content {
+  max-width: 500px;
+}

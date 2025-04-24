@@ -64,8 +64,16 @@
   
       <!-- Save/Discard options when the test is complete -->
       <div *ngIf="!testActive && testStats" class="test-actions">
-        <button (click)="saveTest()" class="save-button">Save Test</button>
-        <button (click)="discardTest()" class="discard-button">Discard Test</button>
+        <button 
+  (click)="saveTest()" 
+  class="save-button" 
+  [disabled]="savingTest">{{ savingTest ? 'Saving...' : 'Save Test' }}
+</button>
+<button 
+  (click)="discardTest()" 
+  class="discard-button" 
+  [disabled]="savingTest">Discard Test</button>
+
       </div>
     </div>
   </div>

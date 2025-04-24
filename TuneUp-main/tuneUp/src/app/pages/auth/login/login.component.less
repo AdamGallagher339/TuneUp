@@ -43,18 +43,18 @@ html, body {
   
   /* Login/register card */
   .auth-card {
-    background: rgba(255, 255, 255, 0.15); /* frosted glass effect */
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px); /* Safari support */
-    padding: 3rem;
-    border-radius: 12px;
+    -webkit-backdrop-filter: blur(16px);
+    padding: 2rem; /* ⬅️ smaller padding */
+    border-radius: 50px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-    width: 400px;
+    width: 320px; /* ⬅️ reduced from 400px */
     max-width: 90%;
     text-align: center;
     color: #fff;
     margin-top: 80px;
-  }
+  }  
   
   /* Heading */
   .auth-card h2 {
@@ -65,15 +65,19 @@ html, body {
   
   /* Inputs */
   .auth-card input {
+    display: block;
     width: 100%;
+    max-width: 260px;      /* ⬅️ limit input width */
+    margin: 0.75rem auto;  /* ⬅️ centers the input horizontally */
     padding: 0.75rem 1rem;
-    margin: 0.75rem 0;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
     background: rgba(255, 255, 255, 0.9);
     color: #000;
+    text-align: center;    /* ⬅️ centers the text inside input */
   }
+  
   
   .auth-card input::placeholder {
     color: #666;
