@@ -1,12 +1,12 @@
 export const environment = {
   production:false,
   firebaseConfig: {
-    apiKey: "AIzaSyDhOumALTyLz269ZUb57tacBcmESYzSO64",
-    authDomain: "tuneup-2003.firebaseapp.com",
-    projectId: "tuneup-2003",
-    storageBucket: "tuneup-2003.appspot.com",
-    messagingSenderId: "478507474674",
-    appId: "1:478507474674:web:092d44e656db9ca087fa6b",
-    measurementId: "G-3DCM3PGNBN"
+    apiKey: "AIzaSyA8sXqrGx3qCxQ87QW7nsu16tLlW0sHSko",
+    authDomain: "tuneupv2.firebaseapp.com",
+    projectId: "tuneupv2",
+    storageBucket: "tuneupv2.firebasestorage.app",
+    messagingSenderId: "29228982705",
+    appId: "1:29228982705:web:43448dcaa998da4b6b9d90",
+    measurementId: "G-C6FCMCHJJW"
   },
 };
