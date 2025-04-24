@@ -9,7 +9,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('../app/pages/auth/login/login.component').then(m => m.LoginComponent)
+    loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent)
   },
   {
     path: 'dashboard',

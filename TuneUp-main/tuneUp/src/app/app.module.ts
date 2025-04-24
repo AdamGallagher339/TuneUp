@@ -1,37 +1,30 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
-import { LoginComponent } from '../app/auth/login/login.component'; // Adjust the path if needed
+import { LoginComponent } from '../app/pages/auth/login/login.component'; 
 import { RouterModule } from '@angular/router';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AppComponent } from './app.component';
-import { sensorService } from './services/sensor.service'; // Fixed casing
+import { sensorService } from './services/sensor.service'; 
 import { FirebaseTestComponent } from './components/firestore-test/firestore-test.component';
-import { CommonModule } from '@angular/common';
-import { query, orderBy, limit } from 'firebase/firestore'; // Add Firestore imports
 import { FormsModule } from '@angular/forms';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    FirebaseTestComponent ,
-    LoginComponent
-  ],
+  declarations: [],
   imports: [
+    LoginComponent,
     RouterModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AppComponent,
+    FirebaseTestComponent
   ],
   providers: [sensorService], // Capital S
-  bootstrap: [AppComponent]
 })
 export class AppModule {}
