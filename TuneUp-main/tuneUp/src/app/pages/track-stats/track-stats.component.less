@@ -1,0 +1,62 @@
+/* Session controls: Align buttons horizontally */
+.session-controls {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+    margin-bottom: 15px;
+  }
+  
+  .session-button,
+  .test-button {
+    padding: 10px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+  }
+  
+  .session-button:hover,
+  .test-button:hover {
+    transform: scale(1.05);
+  }
+  
+  .test-popup {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -20%);
+    background-color: #fff;
+    border: 2px solid #000;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+  }
+  
+  .test-content {
+    text-align: center;
+  }
+  
+  .test-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+  }
+  
+  .save-button,
+  .discard-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .save-button:hover {
+    background-color: green;
+    color: white;
+  }
+  
+  .discard-button:hover {
+    background-color: red;
+    color: white;
+  }
+  

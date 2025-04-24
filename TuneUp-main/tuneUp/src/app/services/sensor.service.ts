@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { initializeApp } from 'firebase/app';
 import { SensorData } from '../components/firestore-test/firestore-test.component';
 
-interface SensorReading extends SensorData {
+export interface SensorReading extends SensorData {
   timestamp: Date;
   speed: number;
   acceleration: { x: number; y: number; z: number };
