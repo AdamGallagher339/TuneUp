@@ -51,7 +51,7 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
   public testActive = false;
   public testStats: TestStats | null = null;
   
-  // Internal test-timing variables (now public for HTML binding)
+  // Internal test-timing variables (public for HTML binding)
   public hit100: boolean = false;
   public brakingStart: number = 0;
   
@@ -181,6 +181,7 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
     const auth = getAuth();
     const user = auth.currentUser;
     if (!user || !this.testStats) { return; }
+    // The test data is saved as a subcollection under the user document:
     const testDoc = doc(this.db, `users/${user.uid}/tests`, Date.now().toString());
     await setDoc(testDoc, { ...this.testStats });
     this.resetTest();
@@ -204,6 +205,7 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
     const auth = getAuth();
     const user = auth.currentUser;
     if (!user || !this.sessionStats) { return; }
+    // Save session data under the logged-in user's document:
     const sessionDoc = doc(this.db, `users/${user.uid}/sessions`, Date.now().toString());
     await setDoc(sessionDoc, {
       ...this.sessionStats,
