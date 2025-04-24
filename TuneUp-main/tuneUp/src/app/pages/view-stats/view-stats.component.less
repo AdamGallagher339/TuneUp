@@ -1,13 +1,13 @@
-/* Full page wrapper */
+/* Wrapper to remove horizontal scroll */
 .view-stats-wrapper {
   position: relative;
   height: 100vh;
   width: 100vw;
   overflow-y: auto;
-  overflow-x: hidden; /* ✅ Prevent horizontal scroll */
+  overflow-x: hidden;
 }
 
-/* Background image layer */
+/* Background */
 .background {
   position: fixed;
   top: 0;
@@ -27,7 +27,7 @@
   z-index: -1;
 }
 
-/* Scrollable content */
+/* Main content container */
 .stats-container {
   min-height: 100vh;
   padding: 100px 20px 140px;
@@ -43,23 +43,21 @@
 /* Two-column wrapper */
 .stats-columns {
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Stack on mobile by default */
   gap: 2rem;
   width: 100%;
-  max-width: 100%;
+  max-width: 1200px;
+  box-sizing: border-box;
   padding: 0 10px;
-  align-items: center; /* ✅ Center cards on mobile */
 }
 
-/* Column container */
+/* Each column */
 .stats-column {
   width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-sizing: border-box;
+  flex: 1 1 auto;
 }
 
 .stats-column h1 {
@@ -68,7 +66,7 @@
   margin-bottom: 1rem;
 }
 
-/* Card style shared */
+/* Card shared */
 .stat-card {
   position: relative;
   background: rgba(255, 255, 255, 0.05);
@@ -84,13 +82,13 @@
   overflow: hidden;
 }
 
-/* SMALLER Ride Sessions */
+/* Smaller ride session card */
 .stat-card.session {
-  max-width: 320px;
+  max-width: 340px;
   padding: 0.75rem 1rem;
 }
 
-/* Tabs */
+/* Colored tabs */
 .stat-card.session::before {
   content: "";
   position: absolute;
@@ -115,7 +113,6 @@
   border-bottom-left-radius: 12px;
 }
 
-/* Card contents */
 .stat-card h2 {
   margin: 0 0 1rem 0;
   font-size: 1.2rem;
@@ -129,7 +126,7 @@
   text-align: center;
 }
 
-/* Message */
+/* Fallback message */
 .empty-msg {
   font-size: 1.1rem;
   margin-top: 2rem;
@@ -137,12 +134,12 @@
   text-align: center;
 }
 
-/* Responsive two-column on wider screens */
+/* Desktop: side by side layout */
 @media (min-width: 768px) {
   .stats-columns {
     flex-direction: row;
     justify-content: center;
-    align-items: flex-start;
+    align-items: stretch; /* ✅ Make columns equal height */
   }
 
   .stats-column {
