@@ -1,13 +1,13 @@
-/* Wrapper that prevents horizontal scroll */
+/* Full page wrapper */
 .view-stats-wrapper {
   position: relative;
   height: 100vh;
   width: 100vw;
   overflow-y: auto;
-  overflow-x: hidden; /* ✅ prevent side scroll */
+  overflow-x: hidden; /* ✅ Prevent horizontal scroll */
 }
 
-/* Background styling (unchanged) */
+/* Background image layer */
 .background {
   position: fixed;
   top: 0;
@@ -27,84 +27,67 @@
   z-index: -1;
 }
 
-/* Scrollable content area */
+/* Scrollable content */
 .stats-container {
   min-height: 100vh;
   padding: 100px 20px 140px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-sizing: border-box;
   color: white;
-  z-index: 1;
-  width: 100%;
+  box-sizing: border-box;
   overflow-x: hidden;
+  width: 100%;
 }
 
-/* Two-column layout with center alignment */
+/* Two-column wrapper */
 .stats-columns {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
   gap: 2rem;
-  flex-wrap: wrap;
   width: 100%;
-  max-width: 1200px;
-  box-sizing: border-box;
+  max-width: 100%;
   padding: 0 10px;
+  align-items: center; /* ✅ Center cards on mobile */
 }
 
-/* Each column (auto stacks on mobile) */
+/* Column container */
 .stats-column {
-  flex: 1 1 450px;
-  min-width: 300px;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-/* Responsive for large screens */
-@media (min-width: 768px) {
-  .stats-columns {
-    flex-wrap: nowrap;
-  }
-
-  .stats-column {
-    width: 50%;
-  }
-
-  .stats-column h1 {
-    text-align: left;
-    width: 100%;
-  }
+  box-sizing: border-box;
 }
 
 .stats-column h1 {
-  text-align: center;
   font-size: 1.8rem;
+  text-align: center;
   margin-bottom: 1rem;
 }
 
-/* Card base */
+/* Card style shared */
 .stat-card {
   position: relative;
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 12px;
-  padding: 1.2rem 1.5rem 1.2rem 1.25rem;
-  margin: 1rem;
+  padding: 1rem;
+  margin: 1rem auto;
   width: 100%;
-  max-width: 400px;
+  max-width: 380px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   color: #fff;
   overflow: hidden;
 }
 
-/* Slightly smaller + shorter Ride Session cards */
+/* SMALLER Ride Sessions */
 .stat-card.session {
-  max-width: 340px;
-  padding: 1rem 1.2rem;
+  max-width: 320px;
+  padding: 0.75rem 1rem;
 }
 
 /* Tabs */
@@ -132,23 +115,53 @@
   border-bottom-left-radius: 12px;
 }
 
-/* Typography */
+/* Card contents */
 .stat-card h2 {
   margin: 0 0 1rem 0;
-  font-size: 1.4rem;
-  color: white;
+  font-size: 1.2rem;
+  text-align: center;
 }
 
 .stat-card p {
   margin: 0.4rem 0;
   color: #ddd;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  text-align: center;
 }
 
-/* Fallback */
+/* Message */
 .empty-msg {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   margin-top: 2rem;
   color: #bbb;
   text-align: center;
+}
+
+/* Responsive two-column on wider screens */
+@media (min-width: 768px) {
+  .stats-columns {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .stats-column {
+    width: 50%;
+    align-items: center;
+  }
+
+  .stat-card,
+  .stat-card.session {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .stat-card h2,
+  .stat-card p {
+    text-align: left;
+  }
+
+  .stats-column h1 {
+    text-align: left;
+  }
 }
