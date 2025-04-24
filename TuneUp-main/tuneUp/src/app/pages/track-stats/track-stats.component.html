@@ -40,20 +40,21 @@
     <div class="test-popup" *ngIf="showTestPopup">
       <div class="test-content">
         <h2>0–100–0 Test</h2>
-
-        <div *ngIf="testActive && !testStats">
+    
+        <!-- Live Test State (while test is running) -->
+        <div *ngIf="testActive">
           <div>Speed: {{ currentSpeed | number:'1.0-0' }} km/h</div>
           <div *ngIf="!hit100">Waiting to hit 100 km/h...</div>
           <div *ngIf="hit100">100 reached — press End Test to stop.</div>
           <button (click)="endTest()" class="end-test-button">End Test</button>
         </div>
-
+    
+        <!-- Test Summary State (after the test ends) -->
         <div *ngIf="!testActive && testStats">
           <div>0–100 Time: {{ testStats.accelerationTime }} s</div>
           <div *ngIf="testStats.brakingTime !== null">
             100–0 Time: {{ testStats.brakingTime }} s
           </div>
-
           <div class="test-actions">
             <button (click)="saveTest()" [disabled]="savingTest" class="save-button">
               {{ savingTest ? 'Saving...' : 'Save Test' }}
