@@ -52,8 +52,8 @@
             <div *ngIf="tests.length > 0; else noTests">
               <div class="stat-card test" *ngFor="let test of tests">
                 <h2>{{ test.date?.toDate?.() | date: 'medium' }}</h2>
-                <p><strong>Acceleration:</strong> {{ test.acceleration }} m/s²</p>
-                <p><strong>Distance:</strong> {{ test.distance }} m</p>
+                <p><strong>Acceleration:</strong> {{ test.acceleration| number:'1.2-2' }} m/s²</p>
+                <p><strong>Distance:</strong> {{ test.distance| number:'1.2-2' }} m</p>
                 <p><strong>Time:</strong> {{ test.time }} sec</p>
                 <button (click)="deleteTest(test.id)" class="test-delete-button">
                   Delete Test
