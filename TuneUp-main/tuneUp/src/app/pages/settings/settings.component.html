@@ -1,6 +1,4 @@
 <div class="settings-container">
-  <div class="settings-background"></div>
-
   <div class="top-banner" *ngIf="toastText">
     {{ toastText }}
   </div>
@@ -8,14 +6,16 @@
   <div class="page-title">⚙️ App Settings</div>
 
   <div class="settings-card">
-    <button class="primary-btn" (click)="restartSensors()">Restart Sensors</button>
-    <button class="primary-btn" (click)="zeroLean()">Zero Lean Angle</button>
-    <button class="primary-btn" (click)="resetSensors()">Reset Sensor Data</button>
+    <h2>Controls</h2>
 
-    <hr />
+    <button class="save-btn" (click)="restartSensors()">Restart Sensors</button>
+    <button class="save-btn" (click)="zeroLeanAngle()">Zero Lean Angle</button>
+    <button class="save-btn" (click)="resetSensorData()">Reset Sensor Data</button>
 
-    <button class="neutral-btn" (click)="logout()">Logout</button>
-    <button class="primary-btn" (click)="changePassword()">Change Password</button>
-   <!-- <button class="danger-btn" (click)="deleteAccount()">Delete Account</button>-->
+    <hr style="margin: 2rem 0; border-color: #fff3;">
+
+    <button class="logout-btn" (click)="logout()">Logout</button>
+    <button class="save-btn" (click)="changePassword()">Change Password</button>
+    <button class="danger-btn" (click)="deleteAccount()"> Delete Account</button>
   </div>
 </div>
