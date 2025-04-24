@@ -1,5 +1,9 @@
 <div class="container">
     <!-- Session Controls: Buttons aligned side by side -->
+
+    <!-- Gauge for Speedometer -->
+    <div id="chartdiv"></div>
+
     <div class="session-controls">
       <button (click)="toggleTracking()" class="session-button">
         {{ isTracking ? 'End Session' : 'Start Session' }}

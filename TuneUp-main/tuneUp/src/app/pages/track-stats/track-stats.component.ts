@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+// Add these declarations so that TypeScript knows about am5, am5xy, am5radar, and am5themes_Animated.
+declare var am5: any;
+declare var am5xy: any;
+declare var am5radar: any;
+declare var am5themes_Animated: any;
+
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { sensorService } from '../../services/sensor.service';
 import { Subject, takeUntil } from 'rxjs';
 import { getAuth } from 'firebase/auth';
@@ -29,7 +35,15 @@ interface TestStats {
   styleUrls: ['./track-stats.component.less'],
   imports: [CommonModule],
 })
-export class TrackStatsComponent implements OnInit, OnDestroy {
+export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
+  // AmCharts gauge properties:
+  public root: any;
+  public chart: any;
+  public xAxis: any;
+  public axisDataItem: any;
+  public axisRenderer: any;
+  public bullet: any;
+
   // Declare the Firestore instance as a public property.
   public db: Firestore = getFirestore();
   
@@ -39,7 +53,7 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
   public showSessionActions = false;
   public timer = 0;
   private timerInterval: any = null;
-  
+
   // Live sensor values
   public currentSpeed = 0;    // in km/h
   public currentLean = 0;
@@ -66,6 +80,7 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
 
   constructor(public sensorService: sensorService) {}
 
+  // Set up sensor subscription in ngOnInit.
   public ngOnInit() {
     this.sensorService.liveData.pipe(
       takeUntil(this.destroy$)
@@ -84,9 +99,80 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
         this.updateSessionStats(data);
       }
       
-      if (this.testActive && this.testStats) {
+      if (this.testActive && this.testStats && this.axisDataItem) {
+        // Instead of a random value, animate gauge pointer to currentSpeed.
+        this.axisDataItem.animate({
+          key: "value",
+          to: this.currentSpeed,
+          duration: 800,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
         this.handleTestLogic(data);
       }
+    });
+  }
+
+  // Initialize gauge after the view is rendered.
+  public ngAfterViewInit() {
+    am5.ready(() => {
+      // Create root element
+      this.root = am5.Root.new("chartdiv");
+  
+      // Set themes
+      this.root.setThemes([
+        am5themes_Animated.new(this.root)
+      ]);
+  
+      // Create RadarChart (the gauge chart)
+      this.chart = this.root.container.children.push(am5radar.RadarChart.new(this.root, {
+        panX: false,
+        panY: false,
+        startAngle: 180,
+        endAngle: 360
+      }));
+  
+      // Create an axis renderer (for the circular gauge)
+      this.axisRenderer = am5radar.AxisRendererCircular.new(this.root, {
+        innerRadius: -10,
+        strokeOpacity: 0.1
+      });
+  
+      // Set axis labels to white.
+      this.axisRenderer.labels.template.setAll({
+        fill: am5.color(0xffffff)
+      });
+  
+      // Create the value axis with a range from 0 to 200
+      this.xAxis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
+        maxDeviation: 0,
+        min: 0,
+        max: 200,
+        strictMinMax: true,
+        renderer: this.axisRenderer
+      }));
+  
+      // Create an axis data item – this holds the gauge pointer value.
+      this.axisDataItem = this.xAxis.makeDataItem({});
+      this.axisDataItem.set("value", 0);
+  
+      // Create bullet (the gauge pointer) and attach it.
+      this.bullet = this.axisDataItem.set("bullet", am5xy.AxisBullet.new(this.root, {
+        sprite: am5radar.ClockHand.new(this.root, {
+          radius: am5.percent(99),
+          // Set the pointer fill (and stroke) to white.
+          fill: am5.color(0xffffff),
+          stroke: am5.color(0xffffff)
+        })
+      }));
+  
+      // Create an axis range using your data item.
+      this.xAxis.createAxisRange(this.axisDataItem);
+  
+      // Optionally, hide grid lines for a cleaner look.
+      this.axisDataItem.get("grid").set("visible", false);
+  
+      // Animate chart appearance.
+      this.chart.appear(1000, 100);
     });
   }
 
@@ -188,8 +274,8 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
       this.savingTest = false;
       return; 
     }
-    // The test data will be saved as a document under:
-    // users/{user.uid}/tests/{timestamp}
+    // Save the test data under the logged-in user's document:
+    // Path: users/{user.uid}/tests/{timestamp}
     const testDoc = doc(this.db, `users/${user.uid}/tests`, Date.now().toString());
     await setDoc(testDoc, { ...this.testStats });
     this.resetTest();
@@ -215,8 +301,7 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
     const auth = getAuth();
     const user = auth.currentUser;
     if (!user || !this.sessionStats) { return; }
-    // The session data is saved under:
-    // users/{user.uid}/sessions/{timestamp}
+    // Save session data to: users/{user.uid}/sessions/{timestamp}
     const sessionDoc = doc(this.db, `users/${user.uid}/sessions`, Date.now().toString());
     await setDoc(sessionDoc, {
       ...this.sessionStats,
