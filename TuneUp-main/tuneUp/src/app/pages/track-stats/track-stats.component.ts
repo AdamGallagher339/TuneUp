@@ -39,7 +39,7 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
   public showSessionActions = false;
   public timer = 0;
   private timerInterval: any = null;
-
+  
   // Live sensor values
   public currentSpeed = 0;    // in km/h
   public currentLean = 0;
@@ -58,6 +58,9 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
   // Public timer properties for the test (in seconds)
   public testAccelerationTimer: number = 0;
   public testBrakingTimer: number = 0;
+  
+  // Flag used to indicate saving progress for the test.
+  public savingTest: boolean = false;
 
   private destroy$ = new Subject<void>();
 
@@ -178,13 +181,19 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
   }
 
   public async saveTest() {
+    this.savingTest = true;
     const auth = getAuth();
     const user = auth.currentUser;
-    if (!user || !this.testStats) { return; }
-    // The test data is saved as a subcollection under the user document:
+    if (!user || !this.testStats) { 
+      this.savingTest = false;
+      return; 
+    }
+    // The test data will be saved as a document under:
+    // users/{user.uid}/tests/{timestamp}
     const testDoc = doc(this.db, `users/${user.uid}/tests`, Date.now().toString());
     await setDoc(testDoc, { ...this.testStats });
     this.resetTest();
+    this.savingTest = false;
   }
 
   public discardTest() {
@@ -199,13 +208,15 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
     this.brakingStart = 0;
     this.testAccelerationTimer = 0;
     this.testBrakingTimer = 0;
+    this.savingTest = false;
   }
 
   public async saveSession() {
     const auth = getAuth();
     const user = auth.currentUser;
     if (!user || !this.sessionStats) { return; }
-    // Save session data under the logged-in user's document:
+    // The session data is saved under:
+    // users/{user.uid}/sessions/{timestamp}
     const sessionDoc = doc(this.db, `users/${user.uid}/sessions`, Date.now().toString());
     await setDoc(sessionDoc, {
       ...this.sessionStats,
