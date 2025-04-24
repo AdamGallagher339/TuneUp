@@ -1,23 +1,25 @@
 <div class="track-stats-wrapper">
+  <!-- Background -->
   <div class="track-stats-background"></div>
 
+  <!-- Scrollable Foreground -->
   <div class="track-stats-container">
-    <!-- Main content -->
     <div class="container">
-      <!-- Session Controls: Buttons aligned side by side -->
+      <!-- Chart -->
       <div id="chartdiv"></div>
 
+      <!-- Session Controls -->
       <div class="session-controls">
         <button (click)="toggleTracking()" class="session-button">
           {{ isTracking ? 'End Session' : 'Start Session' }}
         </button>
-        <button (click)="startTestPopup()" class="test-button"
+        <button (click)="startTestPopup()" class="test-button" 
                 [disabled]="testActive || showTestPopup">
           Start 0–100–0 Test
         </button>
       </div>
 
-      <!-- Overall Live Data for the Tracking Session -->
+      <!-- Live Data -->
       <div *ngIf="isTracking" class="live-data">
         <h2>Live Data</h2>
         <div>Timer: {{ timer }} seconds</div>
@@ -26,7 +28,7 @@
         <div>G-Force: {{ currentGForce | number:'1.1-1' }} g</div>
       </div>
 
-      <!-- Session Summary Display After Tracking Ends -->
+      <!-- Session Summary -->
       <div *ngIf="sessionStats && !isTracking" class="session-stats">
         <h2>Session Summary</h2>
         <div>Duration: {{ sessionStats?.elapsed }} seconds</div>
@@ -40,12 +42,11 @@
       </div>
     </div>
 
-    <!-- 0–100 TEST POPUP -->
+    <!-- Test Popup -->
     <div class="test-popup" *ngIf="showTestPopup">
       <div class="test-content">
         <h2>0–100 Test</h2>
 
-        <!-- While the test is active -->
         <div *ngIf="testActive && testStats">
           <div>Live Speed: {{ currentSpeed | number:'1.0-0' }} km/h</div>
           <div *ngIf="!hit100">
@@ -59,24 +60,24 @@
           </div>
         </div>
 
-        <!-- When test completes -->
         <div *ngIf="!testActive && testStats">
           <div>0–100 Time: {{ testStats.accelerationTime | number:'1.2-2' }} s</div>
           <div>100–0 Braking Time: {{ testStats.brakingTime | number:'1.2-2' }} s</div>
         </div>
 
-        <!-- End and Save Buttons -->
         <button *ngIf="testActive" (click)="endTest()" class="end-test-button">
           End Test
         </button>
 
         <div *ngIf="!testActive && testStats" class="test-actions">
-          <button (click)="saveTest()" class="save-button" [disabled]="savingTest">
-            {{ savingTest ? 'Saving...' : 'Save Test' }}
-          </button>
-          <button (click)="discardTest()" class="discard-button" [disabled]="savingTest">
-            Discard Test
-          </button>
+          <button 
+            (click)="saveTest()" 
+            class="save-button" 
+            [disabled]="savingTest">{{ savingTest ? 'Saving...' : 'Save Test' }}</button>
+          <button 
+            (click)="discardTest()" 
+            class="discard-button" 
+            [disabled]="savingTest">Discard Test</button>
         </div>
       </div>
     </div>
