@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Firestore, doc, getDoc } from '@angular/fire/firestore';
-import { FirebaseTestComponent } from './components/firestore-test/firestore-test.component'; 
+// import { FirebaseTestComponent } from './components/firestore-test/firestore-test.component'; 
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
   imports: [
     CommonModule,
     RouterModule,
-    FirebaseTestComponent
   ],
   selector: 'app-root',
   templateUrl: './app.component.html'

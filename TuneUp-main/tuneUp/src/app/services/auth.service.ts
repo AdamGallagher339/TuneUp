@@ -1,26 +1,32 @@
 // services/auth.service.ts
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User, onAuthStateChanged } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  constructor(private afAuth: AngularFireAuth, private router: Router) {}
+  public currentUser: User | null = null;
 
-  async login(email: string, password: string) {
-    await this.afAuth.signInWithEmailAndPassword(email, password);
+  constructor(private auth: Auth, private router: Router) {
+    onAuthStateChanged(this.auth, (user) => {
+      this.currentUser = user;
+    });
   }
 
-  async register(email: string, password: string) {
-    await this.afAuth.createUserWithEmailAndPassword(email, password);
+  async login(email: string, password: string): Promise<void> {
+    await signInWithEmailAndPassword(this.auth, email, password);
   }
 
-  logout() {
-    this.afAuth.signOut();
+  async register(email: string, password: string): Promise<void> {
+    await createUserWithEmailAndPassword(this.auth, email, password);
+  }
+
+  async logout(): Promise<void> {
+    await signOut(this.auth);
     this.router.navigate(['/login']);
   }
 
-  get currentUser() {
-    return this.afAuth.user;
+  get user() {
+    return this.currentUser;
   }
 }

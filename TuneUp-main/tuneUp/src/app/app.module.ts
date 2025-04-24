@@ -7,8 +7,6 @@ import { AppComponent } from './app.component';
 import { sensorService } from './services/sensor.service'; 
 import { FirebaseTestComponent } from './components/firestore-test/firestore-test.component';
 import { FormsModule } from '@angular/forms';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
@@ -19,11 +17,9 @@ import { AppRoutingModule } from './app-routing.module';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAuthModule,
     AppRoutingModule,
     AppComponent,
-    FirebaseTestComponent
+    FirebaseTestComponent,
   ],
   providers: [sensorService], // Capital S
 })
