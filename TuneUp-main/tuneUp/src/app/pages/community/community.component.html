@@ -1,39 +1,44 @@
-<div class="community-container">
-  <div class="page-title">🏍️ Rider Community</div>
-  
-  <!-- New container wraps the add event button, event form and event feed -->
-  <div class="event-container">
-    <button class="action-btn add-event-button" (click)="creatingEvent = !creatingEvent">
-      {{ creatingEvent ? 'Cancel' : 'Add Event' }}
-    </button>
-    
-    <div class="event-form" *ngIf="creatingEvent">
-      <h3>Create New Ride Event</h3>
-      <input type="text" placeholder="Event Title" [(ngModel)]="event.title" />
-      <textarea placeholder="Description" [(ngModel)]="event.description"></textarea>
-      <input type="text" placeholder="Location" [(ngModel)]="event.location" />
-      <input type="date" [(ngModel)]="event.date" />
-      <button class="action-btn" (click)="createRideEvent()">Save Event</button>
-    </div>
-    
-    <div class="event-feed">
-      <h2>Recent Events</h2>
-      <div *ngIf="events.length > 0; else noEventTpl">
-        <div class="event-card" *ngFor="let event of events">
-          <h3>{{ event.title }}</h3>
-          <p><strong>Description:</strong> {{ event.description }}</p>
-          <p><strong>Location:</strong> {{ event.location }}</p>
-          <p><strong>Date:</strong> {{ event.date }}</p>
-          <p><strong>Joined Riders:</strong> {{ event.attendees?.length || 0 }}</p>
-          <button class="save-btn" (click)="joinRide(event)" [disabled]="hasJoined(event)">
-            {{ hasJoined(event) ? 'Joined' : 'Join Ride' }}
-          </button>
-          <button class="save-btn" (click)="deleteEvent(event.id)">🗑️ Delete</button>
-        </div>
+<div class="view-community-wrapper">
+  <div class="community-background"></div>
+  <div class="community-container">
+    <div class="page-title">🏍️ Rider Community</div>
+    <!-- Your event-container and inner content -->
+    <div class="event-container">
+      <button class="action-btn add-event-button" (click)="creatingEvent = !creatingEvent">
+        {{ creatingEvent ? 'Cancel' : 'Add Event' }}
+      </button>
+      
+      <div class="event-form" *ngIf="creatingEvent">
+        <h3>Create New Ride Event</h3>
+        <input type="text" placeholder="Event Title" [(ngModel)]="event.title" />
+        <textarea placeholder="Description" [(ngModel)]="event.description"></textarea>
+        <input type="text" placeholder="Location" [(ngModel)]="event.location" />
+        <input type="date" [(ngModel)]="event.date" />
+        <button class="action-btn" (click)="createRideEvent()">Save Event</button>
       </div>
-      <ng-template #noEventTpl>
-        <p>No events available. Create one above!</p>
-      </ng-template>
+      
+      <div class="event-feed">
+        <h2>Recent Events</h2>
+        <div *ngIf="events.length > 0; else noEventTpl">
+          <br>
+          <br>
+          <div class="event-card" *ngFor="let event of events">
+            <h3>{{ event.title }}</h3>
+            <p><strong>Description:</strong> {{ event.description }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <p><strong>Date:</strong> {{ event.date }}</p>
+            <p><strong>Joined Riders:</strong> {{ event.attendees?.length || 0 }}</p>
+            <button class="save-btn" (click)="joinRide(event)" [disabled]="hasJoined(event)">
+              {{ hasJoined(event) ? 'Joined' : 'Join Ride' }}
+            </button>
+            <br>
+            <button class="save-btn" (click)="deleteEvent(event.id)">🗑️ Delete</button>
+          </div>
+        </div>
+        <ng-template #noEventTpl>
+          <p>No events available. Create one above!</p>
+        </ng-template>
+      </div>
     </div>
   </div>
 </div>

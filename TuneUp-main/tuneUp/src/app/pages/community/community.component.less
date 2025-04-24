@@ -1,3 +1,13 @@
+// Global reset for html and body
+.view-community-wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #000;  // Ensures no white borders show outside your container
+}
+
 @primary-color: #e60000;       // Main red accent (adjust as needed)
 @secondary-color: #0d0d0d;     // Near-black background
 @accent-color: #692332;        // Button accent color
@@ -10,8 +20,31 @@
 @light-text: #fff;
 @muted-text: #eee;
 
+.community-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: url('https://image.fonwall.ru/o/ts/aprilia-red-theme-wallpaper-racing-bike-motorcycles-and-bicycles.jpeg?auto=compress&fit=crop&w=2560&h=1440&domain=img3.fonwall.ru')
+    no-repeat center center;
+  background-size: cover;
+  z-index: -1;
+}
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #000;  // Ensures the background is dark instead of white
+  overflow-x: hidden;
+}
 /* Main container takes up the full viewport with your background image */
 .community-container {
+  top: 0;
+  left: 0;
+  z-index: 0;
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,151 +54,125 @@
   background: url('https://image.fonwall.ru/o/ts/aprilia-red-theme-wallpaper-racing-bike-motorcycles-and-bicycles.jpeg?auto=compress&fit=crop&w=2560&h=1440&domain=img3.fonwall.ru') no-repeat center center;
   background-size: cover;
   background-attachment: fixed;
-  position: fixed;
   box-sizing: border-box;
-  padding-top: 80px;
-  top: 0;
-    left: 0;
-    z-index: 0;
+  padding: 100px 20px 140px;
+  position: relative; // Now relative to allow scrolling
+}
+
+/* Button styling with your new look */
+button {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  background-color: @accent-color;
+  color: @light-text;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  
+  &:hover {
+    background-color: darken(@accent-color, 10%);
+    transform: translateY(-2px);
   }
   
+  &:disabled {
+    background-color: #444;
+    cursor: not-allowed;
+  }
+  
+  &:focus {
+    outline: 2px solid lighten(@accent-color, 20%);
+    outline-offset: 2px;
+  }
+}
+
+/* Page title now is a centered, restricted-width bar with a semi-transparent dark background */
+.page-title {
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 2rem;
+  text-align: center;
+  padding: 10px;
+  width: auto;
+  max-width: 600px;
+  margin: 0 auto 20px auto;
+  border-radius: 8px;
+  z-index: 100;
+
+}
+
+/* Event container wraps the add event button, form, and event list.
+   It now has a restricted width with a black border so it doesn't run edge-to-edge */
+.event-container {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  margin-top: 20px;
+  border: 1px solid black;
+}
+
+/* Center the add event button */
+.add-event-button {
+  display: block;
+  margin: 0 auto 20px auto;
+}
+
+/* Event form styling: adds a subtle translucent background with a black border */
+.event-form {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid black;
+}
+
+/* Input fields within the form now have a black border instead of a white one */
+.event-form input,
+.event-form textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid black;
+  outline: none;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.event-form input::placeholder,
+.event-form textarea::placeholder {
+  color: #ddd;
+}
+
+/* Event feed title styling */
+.event-feed h2 {
+  font-size: 1.5rem;
+  color: white;
+  text-shadow: 1px 1px 3px black;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Individual event cards now have a dark background with a black border */
+.event-card {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  color: white;
+  text-shadow: 1px 1px 3px black;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
   .page-title {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: black;
-    color: white;
-    font-size: 1.8rem;
-    padding: 1rem 0;
-    text-align: center;
-    font-weight: bold;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  }
-  
-  .community-card {
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    padding: 3rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-    width: 90%;
-    max-width: 1000px;
-    text-align: center;
-    color: #fff;
-  }
-  
-  .community-card h2 {
-    font-size: 1.8rem;
-    margin-bottom: 2rem;
-  }
-  
-  .user-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1.5rem;
-  }
-  
-  .user-card {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 1.5rem;
-    border-radius: 8px;
-    width: 250px;
-    text-align: center;
-    color: #fff;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  }
-  
-  .user-card img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-bottom: 1rem;
-    object-fit: cover;
-    border: 2px solid #fff;
-  }
-  
-  .user-card h3 {
-    margin: 0.5rem 0;
-    font-size: 1.2rem;
-  }
-  
-  .user-card p {
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-  }
-  
-  button {
-    width: 100%;
-    padding: 0.85rem;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 8px;
-    margin-top: 0.5rem;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .save-btn {
-    background-color: #3f51b5;
-    color: white;
-  }
-  
-  .top-banner {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-color: #4caf50;
-    color: white;
-    padding: 1rem;
-    text-align: center;
-    font-weight: bold;
-    z-index: 1000;
-    animation: slideDownUp 2.5s ease-in-out;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  }
-  
-  @keyframes slideDownUp {
-    0% { transform: translateY(-100%); opacity: 0; }
-    10% { transform: translateY(0); opacity: 1; }
-    90% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(-100%); opacity: 0; }
-  }
-
-
-  .event-feed {
-    margin-top: 3rem;
-    width: 100%;
-    max-width: 500px;
-  
-    h2 {
-      font-size: 1.6rem;
-      color: white;
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-  }
-  .community-card {
-    overflow-y: auto;
-    max-height: calc(100vh - 160px);
-  }
-  
-  .stat-card.session {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-radius: 12px;
-    padding: 1rem;
-    margin: 1rem auto;
-    width: 100%;
-    max-width: 380px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    color: #fff;
+    font-size: 1.5rem;
   }
   
   .event-card {
