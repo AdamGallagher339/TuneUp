@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+// Add these declarations so that TypeScript knows about am5, am5xy, am5radar, and am5themes_Animated.
+declare var am5: any;
+declare var am5xy: any;
+declare var am5radar: any;
+declare var am5themes_Animated: any;
+
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { sensorService } from '../../services/sensor.service';
 import { Subject, takeUntil } from 'rxjs';
 import { getAuth } from 'firebase/auth';
@@ -29,7 +35,15 @@ interface TestStats {
   styleUrls: ['./track-stats.component.less'],
   imports: [CommonModule],
 })
-export class TrackStatsComponent implements OnInit, OnDestroy {
+export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
+  // AmCharts gauge properties:
+  public root: any;
+  public chart: any;
+  public xAxis: any;
+  public axisDataItem: any;
+  public axisRenderer: any;
+  public bullet: any;
+
   // Declare the Firestore instance as a public property.
   public db: Firestore = getFirestore();
   
@@ -58,11 +72,15 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
   // Public timer properties for the test (in seconds)
   public testAccelerationTimer: number = 0;
   public testBrakingTimer: number = 0;
+  
+  // Flag used to indicate saving progress for the test.
+  public savingTest: boolean = false;
 
   private destroy$ = new Subject<void>();
 
   constructor(public sensorService: sensorService) {}
 
+  // Set up sensor subscription in ngOnInit.
   public ngOnInit() {
     this.sensorService.liveData.pipe(
       takeUntil(this.destroy$)
@@ -76,16 +94,116 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
         (data.acceleration.y || 0) ** 2 +
         (data.acceleration.z || 0) ** 2
       );
-      
+  
+      // Update the gauge pointer if it exists
+      if (this.axisDataItem) {
+        this.axisDataItem.animate({
+          key: "value",
+          to: this.currentSpeed,
+          duration: 800,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+      }
+  
+      // Additional code: update session and test logic if needed.
       if (this.isTracking && this.sessionStats) {
         this.updateSessionStats(data);
       }
-      
       if (this.testActive && this.testStats) {
         this.handleTestLogic(data);
       }
     });
   }
+  
+
+  // Initialize gauge after the view is rendered.
+  public ngAfterViewInit() {
+    am5.ready(() => {
+      // Create root element
+      this.root = am5.Root.new("chartdiv");
+  
+      // Set themes
+      this.root.setThemes([
+        am5themes_Animated.new(this.root)
+      ]);
+  
+      // Create RadarChart (the gauge chart)
+      this.chart = this.root.container.children.push(am5radar.RadarChart.new(this.root, {
+        panX: false,
+        panY: false,
+        startAngle: 180,
+        endAngle: 360
+      }));
+  
+      // Create an axis renderer for the circular gauge
+      this.axisRenderer = am5radar.AxisRendererCircular.new(this.root, {
+        innerRadius: -10,
+        strokeOpacity: 0.1
+      });
+  
+      // Set axis labels to white.
+      this.axisRenderer.labels.template.setAll({
+        fill: am5.color(0xffffff)
+      });
+  
+      // Create the value axis with a range from 0 to 200
+      this.xAxis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
+        maxDeviation: 0,
+        min: 0,
+        max: 200,
+        strictMinMax: true,
+        renderer: this.axisRenderer
+      }));
+  
+      // Create the axis data item and set its initial value to 0.
+      this.axisDataItem = this.xAxis.makeDataItem({});
+      this.axisDataItem.set("value", 0);
+  
+      // Create bullet (the gauge pointer) and attach it.
+      this.bullet = this.axisDataItem.set("bullet", am5xy.AxisBullet.new(this.root, {
+        sprite: am5radar.ClockHand.new(this.root, {
+          radius: am5.percent(99),
+          fill: am5.color(0xffffff),
+          stroke: am5.color(0xffffff)
+        })
+      }));
+  
+      // Create an axis range from the axis data item.
+      // Capture it in a variable so we can adjust its fill settings.
+      const range = this.xAxis.createAxisRange(this.axisDataItem);
+      // Set the gauge bar (axis fill) to white, with appropriate opacity.
+      range.get("axisFill").setAll({
+        fill: am5.color(0xffffff),
+        fillOpacity: 0.3,
+        visible: true
+      });
+  
+      // Optionally, hide grid lines for a cleaner look.
+      this.axisDataItem.get("grid").set("visible", false);
+  
+      // Animate chart appearance.
+      this.chart.appear(1000, 100);
+  
+      // ---- SIMULATION CODE (for testing) ----
+      // Simulate gauge pointer movement from 0 to 200 repeatedly.
+      let testValue = 0;
+      setInterval(() => {
+        if (testValue > 200) {
+          testValue = 0;
+        }
+        this.axisDataItem.animate({
+          key: "value",
+          to: testValue,
+          duration: 800,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+        testValue += 20;
+      }, 1000);
+      // ---- END SIMULATION CODE ----
+      
+    });
+  }
+  
 
   private updateSessionStats(data: SensorReading): void {
     if (!this.sessionStats) { return; }
@@ -178,13 +296,19 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
   }
 
   public async saveTest() {
+    this.savingTest = true;
     const auth = getAuth();
     const user = auth.currentUser;
-    if (!user || !this.testStats) { return; }
-    // The test data is saved as a subcollection under the user document:
+    if (!user || !this.testStats) { 
+      this.savingTest = false;
+      return; 
+    }
+    // Save the test data under the logged-in user's document:
+    // Path: users/{user.uid}/tests/{timestamp}
     const testDoc = doc(this.db, `users/${user.uid}/tests`, Date.now().toString());
     await setDoc(testDoc, { ...this.testStats });
     this.resetTest();
+    this.savingTest = false;
   }
 
   public discardTest() {
@@ -199,13 +323,14 @@ export class TrackStatsComponent implements OnInit, OnDestroy {
     this.brakingStart = 0;
     this.testAccelerationTimer = 0;
     this.testBrakingTimer = 0;
+    this.savingTest = false;
   }
 
   public async saveSession() {
     const auth = getAuth();
     const user = auth.currentUser;
     if (!user || !this.sessionStats) { return; }
-    // Save session data under the logged-in user's document:
+    // Save session data to: users/{user.uid}/sessions/{timestamp}
     const sessionDoc = doc(this.db, `users/${user.uid}/sessions`, Date.now().toString());
     await setDoc(sessionDoc, {
       ...this.sessionStats,

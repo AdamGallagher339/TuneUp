@@ -1,5 +1,9 @@
 <div class="container">
     <!-- Session Controls: Buttons aligned side by side -->
+
+    <!-- Gauge for Speedometer -->
+    <div id="chartdiv"></div>
+
     <div class="session-controls">
       <button (click)="toggleTracking()" class="session-button">
         {{ isTracking ? 'End Session' : 'Start Session' }}
@@ -64,8 +68,16 @@
   
       <!-- Save/Discard options when the test is complete -->
       <div *ngIf="!testActive && testStats" class="test-actions">
-        <button (click)="saveTest()" class="save-button">Save Test</button>
-        <button (click)="discardTest()" class="discard-button">Discard Test</button>
+        <button 
+  (click)="saveTest()" 
+  class="save-button" 
+  [disabled]="savingTest">{{ savingTest ? 'Saving...' : 'Save Test' }}
+</button>
+<button 
+  (click)="discardTest()" 
+  class="discard-button" 
+  [disabled]="savingTest">Discard Test</button>
+
       </div>
     </div>
   </div>
