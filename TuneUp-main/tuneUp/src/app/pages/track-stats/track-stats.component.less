@@ -81,6 +81,32 @@ h2 {
   margin-bottom: 2rem;
 }
 
+.live-data-popup {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  position: fixed;         // Occupies the entire viewport
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.live-data-content {
+  background: @card-bg;
+  backdrop-filter: blur(8px);
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  color: @light-text;
+  text-align: center;
+}
+
 /* Cards and Sections */
 .live-data, .session-stats {
   background: @card-bg;
@@ -207,6 +233,34 @@ button {
   }
 }
 
+.session-popup {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.session-stats {
+  background: @card-bg;
+  backdrop-filter: blur(8px);
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  color: @light-text;
+  margin: 0 auto;  // ensures it centers if any extra space crops up
+  text-align: center;
+}
+
+
 /* Mobile Adjustments */
 @media (max-width: 600px) {
   .track-stats-container {
@@ -219,5 +273,12 @@ button {
   
   .test-content {
     padding: 1.2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .live-data {
+    width: 90%;     // Reduce the width slightly for better mobile layout.
+    margin: 0 auto; // Automatically centers the box horizontally.
   }
 }
