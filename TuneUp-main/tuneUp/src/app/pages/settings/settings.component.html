@@ -1,1 +1,32 @@
-<p>settings works!</p>
+<ion-header>
+    <ion-toolbar>
+      <ion-title>Settings</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <ion-list>
+  
+      <!-- Dark Mode -->
+      <ion-item>
+        <ion-label>Dark Mode</ion-label>
+        <ion-toggle [(ngModel)]="darkMode" (ionChange)="toggleDarkMode()"></ion-toggle>
+      </ion-item>
+  
+      <!-- Language Picker -->
+      <ion-item>
+        <ion-label>Language</ion-label>
+        <ion-select [(ngModel)]="language" (ionChange)="saveSettings()">
+          <ion-select-option value="en">English</ion-select-option>
+          <ion-select-option value="es">Spanish</ion-select-option>
+        </ion-select>
+      </ion-item>
+  
+      <!-- Logout Button -->
+      <ion-item button (click)="logout()">
+        <ion-label color="danger">Logout</ion-label>
+      </ion-item>
+  
+    </ion-list>
+  </ion-content>
+  
