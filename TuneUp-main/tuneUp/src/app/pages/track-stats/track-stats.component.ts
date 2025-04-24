@@ -131,7 +131,7 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
         endAngle: 360
       }));
   
-      // Create an axis renderer (for the circular gauge)
+      // Create an axis renderer for the circular gauge
       this.axisRenderer = am5radar.AxisRendererCircular.new(this.root, {
         innerRadius: -10,
         strokeOpacity: 0.1
@@ -151,7 +151,7 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
         renderer: this.axisRenderer
       }));
   
-      // Create an axis data item – this holds the gauge pointer value.
+      // Create the axis data item and set its initial value to 0.
       this.axisDataItem = this.xAxis.makeDataItem({});
       this.axisDataItem.set("value", 0);
   
@@ -159,40 +159,47 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.bullet = this.axisDataItem.set("bullet", am5xy.AxisBullet.new(this.root, {
         sprite: am5radar.ClockHand.new(this.root, {
           radius: am5.percent(99),
-          // Set the pointer fill (and stroke) to white.
           fill: am5.color(0xffffff),
           stroke: am5.color(0xffffff)
         })
       }));
   
-      // Create an axis range using your data item.
-      this.xAxis.createAxisRange(this.axisDataItem);
+      // Create an axis range from the axis data item.
+      // Capture it in a variable so we can adjust its fill settings.
+      const range = this.xAxis.createAxisRange(this.axisDataItem);
+      // Set the gauge bar (axis fill) to white, with appropriate opacity.
+      range.get("axisFill").setAll({
+        fill: am5.color(0xffffff),
+        fillOpacity: 0.3,
+        visible: true
+      });
   
       // Optionally, hide grid lines for a cleaner look.
       this.axisDataItem.get("grid").set("visible", false);
   
       // Animate chart appearance.
       this.chart.appear(1000, 100);
-
-       // ---- SIMULATION CODE ----
-    // For testing: simulate gauge pointer movement from 0 to 200 repeatedly.
-    let testValue = 0;
-    setInterval(() => {
-      // Increase testValue; reset to 0 if it exceeds 200.
-      if (testValue > 200) {
-        testValue = 0;
-      }
-      // Animate the gauge pointer to the test value.
-      this.axisDataItem.animate({
-        key: "value",
-        to: testValue,
-        duration: 800,
-        easing: am5.ease.out(am5.ease.cubic)
-      });
-      testValue += 20; // Increment test value for next update.
-    }, 1000);
+  
+      // ---- SIMULATION CODE (for testing) ----
+      // Simulate gauge pointer movement from 0 to 200 repeatedly.
+      let testValue = 0;
+      setInterval(() => {
+        if (testValue > 200) {
+          testValue = 0;
+        }
+        this.axisDataItem.animate({
+          key: "value",
+          to: testValue,
+          duration: 800,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+        testValue += 20;
+      }, 1000);
+      // ---- END SIMULATION CODE ----
+      
     });
   }
+  
 
   private updateSessionStats(data: SensorReading): void {
     if (!this.sessionStats) { return; }
