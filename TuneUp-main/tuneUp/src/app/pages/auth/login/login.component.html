@@ -27,8 +27,8 @@
 
     <p class="toggle-mode">
       {{ isLoginMode ? "Don't have an account?" : "Already have an account?" }}
-      <a href="#" (click)="toggleMode()">Click here</a>
-    </p>
+      <a href="#" (click)="toggleMode($event)">Click here</a>
+    </p>    
 
     <div class="error" *ngIf="error">{{ error }}</div>
   </div>

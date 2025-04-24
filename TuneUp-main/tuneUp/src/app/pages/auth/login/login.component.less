@@ -1,29 +1,15 @@
-/* Prevent scrollbars and layout shifting */
+/* Global reset */
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
-    overflow: hidden; /* prevents white border caused by scroll */
-    background: black; /* fallback behind image */
+    overflow: hidden; /* prevent white borders from scrollbars */
+    background-color: black; /* fallback in case bg image fails */
+    font-family: Arial, sans-serif;
   }
   
-  
-  .page-title {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background-color: black;
-    color: white;
-    font-size: 1.8rem;
-    padding: 1rem 0;
-    text-align: center;
-    font-weight: bold;
-    z-index: 10;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  }
-  
+  /* Background + layout */
   .auth-container {
     display: flex;
     justify-content: center;
@@ -33,18 +19,51 @@ html, body {
     background: url('https://image.fonwall.ru/o/ts/aprilia-red-theme-wallpaper-racing-bike-motorcycles-and-bicycles.jpeg?auto=compress&fit=crop&w=2560&h=1440&domain=img3.fonwall.ru') no-repeat center center;
     background-size: cover;
     background-attachment: fixed;
-    position: fixed; /* key: prevent resizing artifacts */
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 0;
   }
   
+  /* Top bar header */
+  .page-title {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: black;
+    color: white;
+    font-size: 1.8rem;
+    padding: 1rem 0;
+    text-align: center;
+    font-weight: bold;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
   
+  /* Login/register card */
+  .auth-card {
+    background: rgba(255, 255, 255, 0.15); /* frosted glass effect */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px); /* Safari support */
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    width: 400px;
+    max-width: 90%;
+    text-align: center;
+    color: #fff;
+    margin-top: 80px;
+  }
+  
+  /* Heading */
   .auth-card h2 {
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
+    color: white;
   }
   
+  /* Inputs */
   .auth-card input {
     width: 100%;
     padding: 0.75rem 1rem;
@@ -60,6 +79,7 @@ html, body {
     color: #666;
   }
   
+  /* Submit button */
   .auth-card button {
     width: 100%;
     padding: 0.85rem;
@@ -77,6 +97,7 @@ html, body {
     background-color: #303f9f;
   }
   
+  /* Register/Login switch text */
   .toggle-mode {
     margin-top: 1rem;
     font-size: 0.9rem;
@@ -89,16 +110,10 @@ html, body {
     cursor: pointer;
   }
   
+  /* Error message */
   .error {
     margin-top: 1rem;
     color: #ff6b6b;
     font-size: 0.9rem;
   }
-
-  .auth-card h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    color: white; /* ✅ white login text */
-  }
-  
   

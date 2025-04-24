@@ -1,16 +1,38 @@
-import { TestBed } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
+import { Auth, User, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 
-import { AuthService } from './auth.service';
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private currentUser: User | null = null;
 
-describe('AuthService', () => {
-  let service: AuthService;
+  constructor(private auth: Auth, private router: Router) {
+    // ✅ Listen for user state and update
+    onAuthStateChanged(this.auth, (user) => {
+      this.currentUser = user;
+    });
+  }
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(AuthService);
-  });
+  get user() {
+    return this.currentUser;
+  }
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-});
+  async login(email: string, password: string): Promise<void> {
+    await signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  async register(email: string, password: string): Promise<void> {
+    await createUserWithEmailAndPassword(this.auth, email, password);
+    // 👇 Firebase may auto-login here, but user state might take a sec to emit
+    // Router redirect should happen after user is confirmed by the guard
+  }
+
+  async logout(): Promise<void> {
+    await signOut(this.auth);
+    this.router.navigate(['/login']);
+  }
+
+  getCurrentUser(): User | null {
+    return this.currentUser;
+  }
+}

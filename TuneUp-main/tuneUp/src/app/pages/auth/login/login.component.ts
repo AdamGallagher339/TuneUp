@@ -36,10 +36,11 @@ export class LoginComponent {
     } catch (err) {
       this.error = 'Registration failed. Please try again.';
     }
-  }
+  }  
 
-  toggleMode() {
+  toggleMode(event: Event) {
+    event.preventDefault(); // ✅ prevents flicker
     this.isLoginMode = !this.isLoginMode;
     this.error = '';
-  }
+  }  
 }
