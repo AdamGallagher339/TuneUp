@@ -2,7 +2,7 @@
   <div class="track-stats-background"></div>
 
   <div class="track-stats-container">
-    <h1>🛞 Track Stats</h1>
+    <h1>Track Stats</h1>
 
     <!-- Controls -->
     <div class="session-controls">
@@ -18,18 +18,18 @@
     <div *ngIf="isTracking" class="live-data">
       <h2>Live Data</h2>
       <div>Timer: {{ timer }} seconds</div>
-      <div>Speed: {{ currentSpeed | number:'1.0-0' }} km/h</div>
-      <div>Lean: {{ currentLean | number:'1.0-0' }}°</div>
-      <div>G-Force: {{ currentGForce | number:'1.1-1' }} g</div>
+      <div>Speed: {{ currentSpeed | number: '1.0-0' }} km/h</div>
+      <div>Lean: {{ currentLean | number: '1.0-0' }}°</div>
+      <div>G-Force: {{ currentGForce | number: '1.1-1' }} g</div>
     </div>
 
     <!-- Session Summary -->
     <div *ngIf="sessionStats && !isTracking" class="session-stats">
       <h2>Session Summary</h2>
       <div>Duration: {{ sessionStats?.elapsed }} s</div>
-      <div>Top Speed: {{ sessionStats?.topSpeed | number:'1.0-0' }} km/h</div>
-      <div>Avg Speed: {{ sessionStats?.averageSpeed | number:'1.0-0' }} km/h</div>
-      <div>Max Lean: {{ sessionStats?.maxLean | number:'1.0-0' }}°</div>
+      <div>Top Speed: {{ sessionStats?.topSpeed | number: '1.0-0' }} km/h</div>
+      <div>Avg Speed: {{ sessionStats?.averageSpeed | number: '1.0-0' }} km/h</div>
+      <div>Max Lean: {{ sessionStats?.maxLean | number: '1.0-0' }}°</div>
       <div class="session-actions">
         <button (click)="saveSession()" class="save-button">Save Session</button>
         <button (click)="discardSession()" class="discard-button">Discard</button>
@@ -40,9 +40,9 @@
     <div class="test-popup" *ngIf="showTestPopup">
       <div class="test-content">
         <h2>0–100–0 Test</h2>
-
+        
         <div *ngIf="testActive && !testStats">
-          <div>Speed: {{ currentSpeed | number:'1.0-0' }} km/h</div>
+          <div>Speed: {{ currentSpeed | number: '1.0-0' }} km/h</div>
           <div *ngIf="!hit100">Waiting to hit 100 km/h...</div>
           <div *ngIf="hit100">100 reached — press End Test to stop.</div>
           <button (click)="endTest()" class="end-test-button">End Test</button>
@@ -53,7 +53,6 @@
           <div *ngIf="testStats.brakingTime !== null">
             100–0 Time: {{ testStats.brakingTime }} s
           </div>
-
           <div class="test-actions">
             <button (click)="saveTest()" [disabled]="savingTest" class="save-button">
               {{ savingTest ? 'Saving...' : 'Save Test' }}

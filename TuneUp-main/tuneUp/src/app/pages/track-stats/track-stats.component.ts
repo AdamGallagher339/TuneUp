@@ -1,7 +1,34 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+// src/app/components/track-stats/track-stats.component.ts
+// Declare external libraries for AmCharts.
+declare var am5: any;
+declare var am5xy: any;
+declare var am5radar: any;
+declare var am5themes_Animated: any;
+
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { sensorService } from '../../services/sensor.service';
+import { Subject, takeUntil } from 'rxjs';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, Firestore } from 'firebase/firestore';
+import { SensorReading } from '../../services/sensor.service';
+import { CommonModule } from '@angular/common';
+
+interface SessionStats {
+  startTime: Date;
+  endTime?: Date;
+  topSpeed: number;
+  averageSpeed: number;
+  maxLean: number;
+  averageLean: number;
+  elapsed?: number;
+}
+
+interface TestStats {
+  startTime: Date;
+  endTime?: Date;
+  accelerationTime?: number; // Time (seconds) to reach 100 km/h
+  brakingTime?: number;      // Time (seconds) from deceleration until 0 km/h
+}
 
 @Component({
   selector: 'app-track-stats',
@@ -10,150 +37,291 @@ import { getFirestore, doc, setDoc } from 'firebase/firestore';
   templateUrl: './track-stats.component.html',
   styleUrls: ['./track-stats.component.less']
 })
-export class TrackStatsComponent {
-  private db = getFirestore();
+export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
+  // AmCharts gauge properties:
+  public root: any;
+  public chart: any;
+  public xAxis: any;
+  public axisDataItem: any;
+  public axisRenderer: any;
+  public bullet: any;
 
-  isTracking = false;
-  showTestPopup = false;
-  testActive = false;
-  savingTest = false;
+  // Firestore instance.
+  public db: Firestore = getFirestore();
 
-  timer = 0;
-  currentSpeed = 0; // ← Bind to live GPS/sensor
-  currentLean = 0;
-  currentGForce = 0;
+  // Overall session state.
+  public isTracking = false;
+  public sessionStats: SessionStats | null = null;
+  public showSessionActions = false;
+  public timer = 0;
+  private timerInterval: any = null;
 
-  sessionStats: any = null;
+  // Live sensor values.
+  public currentSpeed = 0;    // in km/h
+  public currentLean = 0;
+  public currentGForce = 0;
+  public currentAcceleration = 0;
 
-  testStats: {
-    accelerationTime: number | null;
-    brakingTime: number | null;
-  } | null = null;
+  // Test (0–100–0 pop‑down) state.
+  public showTestPopup = false;
+  public testActive = false;
+  public testStats: TestStats | null = null;
 
-  hit100 = false;
-  private testStart = 0;
-  private accelerationEnd = 0;
+  // Internal test-timing variables.
+  public hit100: boolean = false;
+  public brakingStart: number = 0;
+  public testAccelerationTimer: number = 0;
+  public testBrakingTimer: number = 0;
+  public savingTest: boolean = false;
 
-  toggleTracking() {
-    this.isTracking = !this.isTracking;
-    if (!this.isTracking) {
-      this.sessionStats = {
-        elapsed: this.timer,
-        topSpeed: 121,
-        averageSpeed: 87,
-        maxLean: 42,
-        endTime: new Date()
-      };
-    }
+  private destroy$ = new Subject<void>();
+
+  constructor(public sensorService: sensorService) {}
+
+  ngOnInit() {
+    // Subscribe to live sensor data.
+    this.sensorService.liveData.pipe(
+      takeUntil(this.destroy$)
+    ).subscribe((data: SensorReading) => {
+      // Update displayed live sensor values.
+      this.currentSpeed = data.speed * 3.6; // Convert m/s to km/h.
+      this.currentLean = data.leanAngle;
+      this.currentGForce = data.gForce;
+      this.currentAcceleration = Math.sqrt(
+        (data.acceleration.x || 0) ** 2 +
+        (data.acceleration.y || 0) ** 2 +
+        (data.acceleration.z || 0) ** 2
+      );
+      
+      // If tracking is active, update aggregated session stats.
+      if (this.isTracking && this.sessionStats) {
+        this.updateSessionStats(data);
+      }
+      
+      // If a test is active, animate the gauge and run test logic.
+      if (this.testActive && this.axisDataItem) {
+        this.axisDataItem.animate({
+          key: "value",
+          to: this.currentSpeed,
+          duration: 800,
+          easing: am5.ease.out(am5.ease.cubic)
+        });
+      }
+      if (this.testActive && this.testStats) {
+        this.handleTestLogic(data);
+      }
+    });
   }
-
-  discardSession() {
-    this.sessionStats = null;
-  }
-
-  public async saveSession() {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user || !this.sessionStats) return;
-
-    // Save session data to: users/{user.uid}/sessions/{timestamp}
-    const sessionDoc = doc(this.db, `users/${user.uid}/sessions`, Date.now().toString());
-    try {
-      await setDoc(sessionDoc, {
-        ...this.sessionStats,
-        endTime: this.sessionStats.endTime || new Date(),
+  
+  ngAfterViewInit() {
+    am5.ready(() => {
+      // Create root element for the gauge.
+      this.root = am5.Root.new("chartdiv");
+  
+      // Set chart themes.
+      this.root.setThemes([
+        am5themes_Animated.new(this.root)
+      ]);
+  
+      // Create RadarChart.
+      this.chart = this.root.container.children.push(am5radar.RadarChart.new(this.root, {
+        panX: false,
+        panY: false,
+        startAngle: 180,
+        endAngle: 360
+      }));
+  
+      // Create an axis renderer for the gauge.
+      this.axisRenderer = am5radar.AxisRendererCircular.new(this.root, {
+        innerRadius: -10,
+        strokeOpacity: 0.1
       });
-      console.log('Session data saved successfully!');
-      this.resetSession();
-    } catch (error) {
-      console.error('Error saving session data:', error);
-    }
+      this.axisRenderer.labels.template.setAll({
+        fill: am5.color(0xffffff)
+      });
+  
+      // Create the value axis.
+      this.xAxis = this.chart.xAxes.push(am5xy.ValueAxis.new(this.root, {
+        maxDeviation: 0,
+        min: 0,
+        max: 200,
+        strictMinMax: true,
+        renderer: this.axisRenderer
+      }));
+  
+      // Create an axis data item to hold the gauge pointer value.
+      this.axisDataItem = this.xAxis.makeDataItem({});
+      this.axisDataItem.set("value", 0);
+  
+      // Create the gauge pointer.
+      this.bullet = this.axisDataItem.set("bullet", am5xy.AxisBullet.new(this.root, {
+        sprite: am5radar.ClockHand.new(this.root, {
+          radius: am5.percent(99),
+          fill: am5.color(0xffffff),
+          stroke: am5.color(0xffffff)
+        })
+      }));
+  
+      // Create a gauge bar range.
+      const range = this.xAxis.createAxisRange(this.axisDataItem);
+      range.get("axisFill").setAll({
+        fill: am5.color(0xffffff),
+        fillOpacity: 0.3,
+        visible: true
+      });
+  
+      this.axisDataItem.get("grid").set("visible", false);
+      this.chart.appear(1000, 100);
+    });
   }
-
-  startTestPopup() {
-    this.showTestPopup = true;
-    this.testActive = true;
-    this.testStats = null;
-    this.testStart = performance.now();
-    this.accelerationEnd = 0;
-    this.hit100 = false;
-
-    this.monitorSpeedForTest();
-  }
-
-  monitorSpeedForTest() {
-    const interval = setInterval(() => {
-      if (!this.testActive) {
-        clearInterval(interval);
-        return;
-      }
-
-      const speed = this.currentSpeed;
-
-      if (!this.hit100 && speed >= 100) {
-        this.hit100 = true;
-        this.accelerationEnd = performance.now();
-        console.log('✅ Reached 100 km/h');
-      }
-    }, 200);
-  }
-
-  endTest() {
-    if (!this.testActive) return;
-
-    this.testActive = false;
-    const now = performance.now();
-
-    let accelerationTime: number | null = null;
-    let brakingTime: number | null = null;
-
-    if (this.hit100 && this.accelerationEnd > 0) {
-      accelerationTime = (this.accelerationEnd - this.testStart) / 1000;
-      brakingTime = (now - this.accelerationEnd) / 1000;
-    } else {
-      accelerationTime = (now - this.testStart) / 1000;
-    }
-
-    this.testStats = {
-      accelerationTime: parseFloat(accelerationTime.toFixed(2)),
-      brakingTime: brakingTime ? parseFloat(brakingTime.toFixed(2)) : null
-    };
-
-    console.log('🏁 Test ended:', this.testStats);
-  }
-
-  discardTest() {
-    this.resetTest();
-  }
-
-  public async saveTest() {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    if (!user || !this.testStats) {
-      console.warn('No test data to save or user not authenticated.');
+  
+  private updateSessionStats(data: SensorReading): void {
+    if (!this.sessionStats) {
       return;
     }
-
-    const testDoc = doc(this.db, `users/${user.uid}/tests`, Date.now().toString());
-    try {
-      await setDoc(testDoc, { ...this.testStats });
-      console.log('Test data saved successfully!');
-      this.resetTest();
-    } catch (error) {
-      console.error('Error saving test data:', error);
+    this.sessionStats.topSpeed = Math.max(this.sessionStats.topSpeed, this.currentSpeed);
+    this.sessionStats.maxLean = Math.max(this.sessionStats.maxLean, this.currentLean);
+    this.sessionStats.averageLean =
+      (this.sessionStats.averageLean * (this.sessionStats.elapsed || 0) + this.currentLean) /
+      ((this.sessionStats.elapsed || 0) + 1);
+    this.sessionStats.averageSpeed =
+      (this.sessionStats.averageSpeed * (this.sessionStats.elapsed || 0) + this.currentSpeed) /
+      ((this.sessionStats.elapsed || 0) + 1);
+    this.sessionStats.elapsed = Math.floor(
+      (Date.now() - this.sessionStats.startTime.getTime()) / 1000
+    );
+  }
+  
+  public toggleTracking() {
+    this.isTracking = !this.isTracking;
+    if (this.isTracking) {
+      this.startNewSession();
+      this.sensorService.startTracking().catch(err => {
+        console.error('Failed to start tracking:', err);
+        this.isTracking = false;
+      });
+      this.timer = 0;
+      this.timerInterval = setInterval(() => this.timer++, 1000);
+    } else {
+      clearInterval(this.timerInterval);
+      this.sensorService.stopTracking();
+      if (this.sessionStats) {
+        this.sessionStats.endTime = new Date();
+      }
+      this.showSessionActions = true;
     }
   }
-
-  private resetSession() {
-    this.sessionStats = null;
-    this.timer = 0;
-    this.isTracking = false;
+  
+  private startNewSession() {
+    this.sessionStats = {
+      startTime: new Date(),
+      topSpeed: 0,
+      averageSpeed: 0,
+      maxLean: 0,
+      averageLean: 0,
+      elapsed: 0,
+    };
   }
-
+  
+  // --- Test (0–100–0) Pop‑Down Functions ---
+  
+  public startTestPopup() {
+    this.showTestPopup = true;
+    this.testActive = true;
+    this.testStats = { startTime: new Date() };
+    this.hit100 = false;
+    this.brakingStart = 0;
+    this.testAccelerationTimer = 0;
+    this.testBrakingTimer = 0;
+  }
+  
+  private handleTestLogic(data: SensorReading): void {
+    if (!this.testStats) { return; }
+    // Measure acceleration until speed reaches 100 km/h.
+    if (!this.hit100) {
+      this.testAccelerationTimer = (Date.now() - this.testStats.startTime.getTime()) / 1000;
+      if (this.currentSpeed >= 100) {
+        this.testStats.accelerationTime = this.testAccelerationTimer;
+        this.hit100 = true;
+      }
+    } else {
+      if (this.brakingStart === 0 && this.currentSpeed < 100) {
+        this.brakingStart = Date.now();
+      }
+      if (this.brakingStart !== 0) {
+        this.testBrakingTimer = (Date.now() - this.brakingStart) / 1000;
+        this.testStats.brakingTime = this.testBrakingTimer;
+        if (this.currentSpeed <= 0) {
+          this.endTest();
+        }
+      }
+    }
+  }
+  
+  public endTest() {
+    if (this.testStats && !this.testStats.endTime) {
+      this.testStats.endTime = new Date();
+    }
+    this.testActive = false;
+  }
+  
+  public async saveTest() {
+    this.savingTest = true;
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user || !this.testStats) { 
+      this.savingTest = false;
+      return; 
+    }
+    const testDoc = doc(this.db, `users/${user.uid}/tests`, Date.now().toString());
+    await setDoc(testDoc, { ...this.testStats });
+    this.resetTest();
+    this.savingTest = false;
+  }
+  
+  public discardTest() {
+    this.resetTest();
+  }
+  
   private resetTest() {
     this.testStats = null;
     this.showTestPopup = false;
     this.testActive = false;
     this.hit100 = false;
+    this.brakingStart = 0;
+    this.testAccelerationTimer = 0;
+    this.testBrakingTimer = 0;
+    this.savingTest = false;
+  }
+  
+  public async saveSession() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user || !this.sessionStats) { return; }
+    const sessionDoc = doc(this.db, `users/${user.uid}/sessions`, Date.now().toString());
+    await setDoc(sessionDoc, {
+      ...this.sessionStats,
+      endTime: this.sessionStats.endTime || new Date(),
+    });
+    this.resetSession();
+  }
+  
+  public discardSession() {
+    this.resetSession();
+  }
+  
+  private resetSession() {
+    this.sessionStats = null;
+    this.showSessionActions = false;
+    clearInterval(this.timerInterval);
+    this.timer = 0;
+    this.isTracking = false;
+  }
+  
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.sensorService.stopTracking();
+    clearInterval(this.timerInterval);
   }
 }
