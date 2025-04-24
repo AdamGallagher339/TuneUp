@@ -55,6 +55,9 @@
                 <p><strong>Acceleration:</strong> {{ test.acceleration }} m/s²</p>
                 <p><strong>Distance:</strong> {{ test.distance }} m</p>
                 <p><strong>Time:</strong> {{ test.time }} sec</p>
+                <button (click)="deleteTest(test.id)" class="test-delete-button">
+                  Delete Test
+                </button>
               </div>
             </div>
           </ng-container>
