@@ -14,14 +14,26 @@
             <div *ngIf="sessions.length > 0; else noSessions">
               <div class="stat-card session" *ngFor="let stat of sessions">
                 <h2>{{ stat.startTime?.toDate?.() | date: 'medium' }}</h2>
-                <p><strong>Top Speed:</strong> {{ stat.topSpeed }} km/h</p>
-                <p><strong>Average Speed:</strong> {{ stat.averageSpeed }} km/h</p>
-                <p><strong>Max Lean:</strong> {{ stat.maxLean }}°</p>
                 <p>
-                  <strong>Elapsed Time:</strong> 
-                  {{ stat.elapsed | formatDuration }}
-                </p>
-                <p><strong>Top G-Force:</strong> {{ stat.topGForce }} g</p>
+                <strong>Top Speed:</strong>               
+                {{ stat.topSpeed | number:'1.0-0' }} km/h
+              </p>
+              <p>
+                <strong>Average Speed:</strong>
+                {{ stat.averageSpeed | number:'1.0-0' }} km/h
+              </p>
+              <p>
+                <strong>Max Lean:</strong>
+                {{ stat.maxLean | number:'1.2-2' }}°
+              </p>
+              <p>
+                <strong>Elapsed Time:</strong>
+                {{ stat.elapsed | formatDuration }}
+              </p>
+              <p>
+                <strong>Top G-Force:</strong>
+                {{ stat.topGForce }} g
+              </p>
               </div>
             </div>
           </ng-container>
