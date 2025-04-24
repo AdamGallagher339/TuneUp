@@ -1,17 +1,35 @@
-<!-- auth/login/login.component.html -->
 <div class="auth-container">
-  <h2>{{ isLoginMode ? 'Login' : 'Register' }}</h2>
-  
-  <input type="email" [(ngModel)]="email" placeholder="Email">
-  <input type="password" [(ngModel)]="password" placeholder="Password">
-  
-  <button (click)="isLoginMode ? login() : register()">
-    {{ isLoginMode ? 'Login' : 'Register' }}
-  </button>
-  
-  <p class="toggle-mode" (click)="isLoginMode = !isLoginMode">
-    {{ isLoginMode ? 'Create new account' : 'Already have an account?' }}
-  </p>
-  
-  <div class="error" *ngIf="error">{{ error }}</div>
+  <div class="page-title">🏍️ TuneUp Motorbike Safety</div>
+
+  <div class="auth-card">
+    <h2>{{ isLoginMode ? 'Login' : 'Create Account' }}</h2>
+
+    <form (ngSubmit)="isLoginMode ? login() : register()" #authForm="ngForm">
+      <input
+        type="email"
+        name="email"
+        [(ngModel)]="email"
+        required
+        placeholder="Email"
+      />
+      <input
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+        required
+        placeholder="Password"
+      />
+
+      <button type="submit" [disabled]="authForm.invalid">
+        {{ isLoginMode ? 'Login' : 'Register' }}
+      </button>
+    </form>
+
+    <p class="toggle-mode">
+      {{ isLoginMode ? "Don't have an account?" : "Already have an account?" }}
+      <a href="#" (click)="toggleMode($event)">Click here</a>
+    </p>    
+
+    <div class="error" *ngIf="error">{{ error }}</div>
+  </div>
 </div>
