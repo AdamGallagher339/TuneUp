@@ -35,7 +35,7 @@ export class sensorService {
   private gpsWatch: number | null = null;
   public liveData = new Subject<SensorReading>();
 
-  private currentState: SensorReading = {
+  public currentState: SensorReading = {
     timestamp: new Date(),
     speed: 0,
     acceleration: { x: 0, y: 0, z: 0 },
@@ -160,7 +160,7 @@ private handleOrientation(event: DeviceOrientationEvent): void {
   this.emitState();
 }
 
-private emitState(): void {
+public emitState(): void {
   this.liveData.next({...this.currentState});
   this.saveReading({...this.currentState});
 }

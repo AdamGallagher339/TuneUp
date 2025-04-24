@@ -1,34 +1,21 @@
 <div class="settings-container">
+  <div class="top-banner" *ngIf="toastText">
+    {{ toastText }}
+  </div>
+
   <div class="page-title">⚙️ App Settings</div>
 
   <div class="settings-card">
-    <h2>Settings</h2>
+    <h2>Controls</h2>
 
-    <!-- Dark Mode -->
-    <div class="setting-row">
-      <label for="darkMode">Dark Mode</label>
-      <input type="checkbox" id="darkMode" [(ngModel)]="darkMode" (change)="toggleDarkMode()" />
-    </div>
+    <button class="save-btn" (click)="restartSensors()">Restart Sensors</button>
+    <button class="save-btn" (click)="zeroLeanAngle()">Zero Lean Angle</button>
+    <button class="save-btn" (click)="resetSensorData()">Reset Sensor Data</button>
 
-    <!-- Auto-start Sensors -->
-    <div class="setting-row">
-      <label for="autoSensors">Auto-Start Sensors</label>
-      <input type="checkbox" id="autoSensors" [(ngModel)]="autoStartSensors" (change)="saveSettings()" />
-    </div>
+    <hr style="margin: 2rem 0; border-color: #fff3;">
 
-    <!-- Notifications -->
-    <div class="setting-row">
-      <label for="notifications">Enable Notifications</label>
-      <input type="checkbox" id="notifications" [(ngModel)]="notifications" (change)="saveSettings()" />
-    </div>
-
-    <!-- Save Button -->
-    <button class="save-btn" (click)="saveSettings()">Save</button>
-
-    <!-- Logout -->
     <button class="logout-btn" (click)="logout()">Logout</button>
-
-    <!-- Delete -->
+    <button class="save-btn" (click)="changePassword()">Change Password</button>
     <button class="danger-btn" (click)="deleteAccount()">Delete Account</button>
   </div>
 </div>
