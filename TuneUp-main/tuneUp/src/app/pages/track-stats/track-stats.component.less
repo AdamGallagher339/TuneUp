@@ -1,21 +1,25 @@
-@primary-color: #e60000;      // Red accent
-@secondary-color: #0d0d0d;    // Nearly black
-@accent-color: #03a9f4;       // Button / secondary accents
-@card-bg: rgba(255, 255, 255, 0.08);
+@primary-color: #e60000;       // Main red accent (adjust as needed)
+@secondary-color: #0d0d0d;     // Near-black background
+@accent-color: #03a9f4;        // Button accent color
+@success-color: #4caf50;
+@error-color: #f44336;
+@warning-color: #ff9800;
+
 @background-overlay: rgba(0, 0, 0, 0.6);
+@card-bg: rgba(255, 255, 255, 0.08);
 @light-text: #fff;
 @muted-text: #eee;
 
-.view-rides-wrapper {
+.track-stats-wrapper {
   height: 100vh;
   width: 100vw;
-  position: relative;
-  font-family: 'Segoe UI', sans-serif;
   overflow-y: auto;
   overflow-x: hidden;
+  position: relative;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.view-rides-background {
+.track-stats-background {
   position: fixed;
   top: 0;
   left: 0;
@@ -31,82 +35,90 @@
   z-index: -1;
 }
 
-.view-rides-container {
-  max-width: 1000px;
+.track-stats-container {
+  min-height: 100vh;
+  padding: 100px 20px 140px;
+  width: 100%;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 80px 20px 140px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   color: @light-text;
-  position: relative;
-  z-index: 1;
 }
 
 header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  text-align: center;
-}
-
-.tab-content {
-  display: flex;
-  gap: 2rem;
-  width: 100%;
-  
-  // Stacks the sections vertically on smaller screens
-  @media (max-width: 800px) {
-    flex-direction: column;
-  }
-}
-
-.tab-content section {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.tab-content section h2 {
-  font-size: 1.8rem;
+  color: @light-text;
   text-align: center;
   margin-bottom: 1rem;
-  border-bottom: 1px solid lighten(@secondary-color, 20%);
-  padding-bottom: 0.5rem;
+  font-size: 2.5rem;
 }
 
-.session-card,
-.test-card {
+h2 {
+  color: @light-text;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+#chartdiv {
+  width: 100%;
+  height: 300px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  margin-bottom: 2rem;
+}
+
+/* Session Controls */
+.session-controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+/* Cards and Sections */
+.live-data, .session-stats {
   background: @card-bg;
   backdrop-filter: blur(8px);
   padding: 1.5rem;
   border-radius: 12px;
+  width: 100%;
+  margin-bottom: 2rem;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-  
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    
-    li {
-      font-size: 1.1rem;
-      margin: 0.5rem 0;
-      color: @muted-text;
-      strong {
-        color: @light-text;
-      }
-    }
-  }
-  
-  .timestamp {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    text-align: right;
-    color: lighten(@muted-text, 10%);
-  }
+  color: @light-text;
 }
 
-/* Extra styling for interactive elements (if needed later) */
+.live-data div,
+.session-stats div,
+.live-data li,
+.session-stats li {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  text-align: center;
+  color: @muted-text;
+}
+
+.session-stats ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+/* Action Buttons */
+.session-actions, .test-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
 button {
   padding: 0.7rem 1.5rem;
   border: none;
@@ -124,12 +136,88 @@ button {
   }
   
   &:disabled {
-    background-color: darken(@secondary-color, 10%);
+    background-color: #444;
     cursor: not-allowed;
   }
   
   &:focus {
     outline: 2px solid lighten(@accent-color, 20%);
     outline-offset: 2px;
+  }
+}
+
+.save-button {
+  background-color: @success-color;
+  
+  &:hover {
+    background-color: darken(@success-color, 10%);
+  }
+}
+
+.discard-button {
+  background-color: @error-color;
+  
+  &:hover {
+    background-color: darken(@error-color, 10%);
+  }
+}
+
+.end-test-button {
+  background-color: @warning-color;
+  
+  &:hover {
+    background-color: darken(@warning-color, 10%);
+  }
+}
+
+/* Popup Modal */
+.test-popup {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.test-content {
+  background: @card-bg;
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  color: @light-text;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  
+  h2 {
+    margin-bottom: 1rem;
+  }
+  
+  div {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+    color: lighten(@muted-text, 10%);
+  }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+  .track-stats-container {
+    padding: 60px 15px 100px;
+  }
+  
+  #chartdiv {
+    height: 250px;
+  }
+  
+  .test-content {
+    padding: 1.2rem;
   }
 }

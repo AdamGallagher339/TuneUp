@@ -1,58 +1,74 @@
-<div class="view-rides-wrapper">
-  <div class="view-rides-background"></div>
-  <main class="view-rides-container">
+<div class="track-stats-wrapper">
+  <div class="track-stats-background"></div>
+
+  <main class="track-stats-container">
     <header>
-      <h1>View Rides</h1>
+      <h1>Track Stats</h1>
     </header>
-    <div class="tab-content">
-      
-      <!-- Ride Sessions Section -->
-      <section class="ride-sessions">
-        <h2>Ride Sessions</h2>
-        <!-- Each session card can be generated dynamically -->
-        <article class="session-card">
-          <ul>
-            <li><strong>Top Speed:</strong> 121 km/h</li>
-            <li><strong>Average Speed:</strong> 87 km/h</li>
-            <li><strong>Max Lean:</strong> 42°</li>
-            <li><strong>Elapsed Time:</strong> 0 sec</li>
-          </ul>
-          <div class="timestamp">Apr 24, 2025, 10:04:44 PM</div>
-        </article>
 
-        <article class="session-card">
-          <ul>
-            <li><strong>Top Speed:</strong> 0 km/h</li>
-            <li><strong>Average Speed:</strong> 0 km/h</li>
-            <li><strong>Max Lean:</strong> 0°</li>
-            <li><strong>Elapsed Time:</strong> 2 sec</li>
-          </ul>
-          <div class="timestamp">Apr 24, 2025, 09:45:12 PM</div>
-        </article>
-      </section>
+    <!-- Session Controls -->
+    <section class="session-controls">
+      <button (click)="toggleTracking()">
+        {{ isTracking ? 'End Session' : 'Start Session' }}
+      </button>
+      <button (click)="startTestPopup()" [disabled]="testActive || showTestPopup">
+        Start 0–100–0 Test
+      </button>
+    </section>
 
-      <!-- Speed Tests Section -->
-      <section class="speed-tests">
-        <h2>Speed Tests</h2>
-        <!-- A speed test card with details -->
-        <article class="test-card">
-          <ul>
-            <li><strong>Acceleration:</strong> 3.2 m/s²</li>
-            <li><strong>Distance:</strong> 150 m</li>
-            <li><strong>Time:</strong> 7.8 sec</li>
-          </ul>
-          <div class="timestamp">Apr 24, 2025, 10:14:32 PM</div>
-        </article>
+    <!-- Live Data -->
+    <section *ngIf="isTracking" class="live-data">
+      <h2>Live Data</h2>
+      <div>Timer: {{ timer }} seconds</div>
+      <div>Speed: {{ currentSpeed | number:'1.0-0' }} km/h</div>
+      <div>Lean: {{ currentLean | number:'1.0-0' }}°</div>
+      <div>G-Force: {{ currentGForce | number:'1.1-1' }} g</div>
+    </section>
 
-        <article class="test-card">
-          <ul>
-            <li><strong>Acceleration:</strong> 3.8 m/s²</li>
-            <li><strong>Distance:</strong> 145 m</li>
-            <li><strong>Time:</strong> 7.5 sec</li>
-          </ul>
-          <div class="timestamp">Apr 24, 2025, 09:50:05 PM</div>
-        </article>
-      </section>
+    <!-- Session Summary -->
+    <section *ngIf="sessionStats && !isTracking" class="session-stats">
+      <h2>Session Summary</h2>
+      <ul>
+        <li>Duration: {{ sessionStats?.elapsed }} s</li>
+        <li>Top Speed: {{ sessionStats?.topSpeed | number:'1.0-0' }} km/h</li>
+        <li>Avg Speed: {{ sessionStats?.averageSpeed | number:'1.0-0' }} km/h</li>
+        <li>Max Lean: {{ sessionStats?.maxLean | number:'1.0-0' }}°</li>
+      </ul>
+      <div class="session-actions">
+        <button (click)="saveSession()" class="save-button">Save Session</button>
+        <button (click)="discardSession()" class="discard-button">Discard</button>
+      </div>
+    </section>
+
+    <!-- Test Popup -->
+    <div class="test-popup" *ngIf="showTestPopup" role="dialog" aria-modal="true">
+      <div class="test-content">
+        <h2>0–100–0 Test</h2>
+        
+        <!-- Live Test State -->
+        <div *ngIf="testActive" class="test-live">
+          <div>Speed: {{ currentSpeed | number:'1.0-0' }} km/h</div>
+          <div *ngIf="!hit100">Waiting to hit 100 km/h...</div>
+          <div *ngIf="hit100">100 reached — press End Test to stop.</div>
+          <button (click)="endTest()" class="end-test-button">End Test</button>
+        </div>
+        
+        <!-- Test Summary State -->
+        <div *ngIf="!testActive && testStats" class="test-summary">
+          <div>0–100 Time: {{ testStats.accelerationTime }} s</div>
+          <div *ngIf="testStats.brakingTime !== null">
+            100–0 Time: {{ testStats.brakingTime }} s
+          </div>
+          <div class="test-actions">
+            <button (click)="saveTest()" [disabled]="savingTest" class="save-button">
+              {{ savingTest ? 'Saving...' : 'Save Test' }}
+            </button>
+            <button (click)="discardTest()" [disabled]="savingTest" class="discard-button">
+              Discard
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 </div>
