@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SensorService } from 'src/app/services/sensor.service';
-import { AuthService } from 'src/app/services/auth.service';
+import { sensorService } from '../../services/sensor.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-settings',
@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./settings.component.less']
 })
 export class SettingsComponent {
-  private sensorService = inject(SensorService);
+  private sensorService = inject(sensorService);
   private authService = inject(AuthService);
 
   toastText: string | null = null;
@@ -22,17 +22,17 @@ export class SettingsComponent {
   }
 
   restartSensors() {
-    this.sensorService.restartSensors();
+    //this.sensorService.restartSensors();
     this.showToast('🔄 Sensors restarted!');
   }
 
   zeroLean() {
-    this.sensorService.zeroLeanAngle();
+   // this.sensorService.zeroLeanAngle();
     this.showToast('🧭 Lean angle zeroed.');
   }
 
   resetSensors() {
-    this.sensorService.resetSensorData();
+   // this.sensorService.resetSensorData();
     this.showToast('♻️ Sensor data reset.');
   }
 
@@ -42,13 +42,13 @@ export class SettingsComponent {
   }
 
   changePassword() {
-    this.authService.sendPasswordResetEmail();
+    //this.authService.sendPasswordResetEmail();
     this.showToast('📧 Password reset email sent.');
   }
 
-  deleteAccount() {
-    this.authService.deleteAccount().then(() => {
-      this.showToast('⚠️ Account deleted.');
-    });
-  }
+  //deleteAccount() {
+    //this.authService.deleteAccount().then(() => {
+  //    this.showToast('⚠️ Account deleted.');
+   // });
+//  }
 }
