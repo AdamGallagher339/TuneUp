@@ -1,1 +1,55 @@
-<p>view-stats works!</p>
+<div class="view-stats-wrapper">
+  <!-- Background -->
+  <div class="background"></div>
+
+  <!-- Scrollable content -->
+  <div class="stats-container">
+    <ng-container *ngIf="!loading; else loadingTpl">
+      <div class="stats-columns">
+
+        <!-- LEFT: Ride Sessions -->
+        <div class="stats-column">
+          <h1>📊 Ride Sessions</h1>
+          <ng-container *ngIf="sessions$ | async as sessions">
+            <div *ngIf="sessions.length > 0; else noSessions">
+              <div class="stat-card session" *ngFor="let stat of sessions">
+                <h2>{{ stat.startTime?.toDate?.() | date: 'medium' }}</h2>
+                <p><strong>Top Speed:</strong> {{ stat.topSpeed }} km/h</p>
+                <p><strong>Average Speed:</strong> {{ stat.averageSpeed }} km/h</p>
+                <p><strong>Max Lean:</strong> {{ stat.maxLean }}°</p>
+                <p><strong>Elapsed Time:</strong> {{ stat.elapsed }} sec</p>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noSessions>
+            <p class="empty-msg">No ride sessions found.</p>
+          </ng-template>
+        </div>
+
+        <!-- RIGHT: Speed Tests -->
+        <div class="stats-column">
+          <h1>⏱️ Speed Tests</h1>
+          <ng-container *ngIf="tests$ | async as tests">
+            <div *ngIf="tests.length > 0; else noTests">
+              <div class="stat-card test" *ngFor="let test of tests">
+                <h2>{{ test.date?.toDate?.() | date: 'medium' }}</h2>
+                <p><strong>Acceleration:</strong> {{ test.acceleration }} m/s²</p>
+                <p><strong>Distance:</strong> {{ test.distance }} m</p>
+                <p><strong>Time:</strong> {{ test.time }} sec</p>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #noTests>
+            <p class="empty-msg">No speed tests found.</p>
+          </ng-template>
+        </div>
+
+      </div>
+    </ng-container>
+
+    <!-- Loading fallback -->
+    <ng-template #loadingTpl>
+      <p class="empty-msg">Loading your stats...</p>
+    </ng-template>
+  </div>
+</div>
