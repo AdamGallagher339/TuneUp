@@ -1,15 +1,16 @@
-// auth/login/login.component.ts
 import { Component } from '@angular/core';
-import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
-  standalone: true,
   selector: 'app-login',
+  standalone: true,
   templateUrl: './login.component.html',
-  imports: [CommonModule, FormsModule]
+  styleUrls: ['./login.component.less'],
+  imports: [CommonModule, FormsModule],
 })
 export class LoginComponent {
   email = '';
@@ -17,23 +18,28 @@ export class LoginComponent {
   error = '';
   isLoginMode = true;
 
-  constructor(public auth: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   async login() {
     try {
-      await this.auth.login(this.email, this.password);
+      await this.authService.login(this.email, this.password);
       this.router.navigate(['/dashboard']);
-    } catch (err: any) {
-      this.error = err.message;
+    } catch (err) {
+      this.error = 'Login failed. Please check your credentials.';
     }
   }
 
   async register() {
     try {
-      await this.auth.register(this.email, this.password);
+      await this.authService.register(this.email, this.password);
       this.router.navigate(['/dashboard']);
-    } catch (err: any) {
-      this.error = err.message;
+    } catch (err) {
+      this.error = 'Registration failed. Please try again.';
     }
+  }
+
+  toggleMode() {
+    this.isLoginMode = !this.isLoginMode;
+    this.error = '';
   }
 }

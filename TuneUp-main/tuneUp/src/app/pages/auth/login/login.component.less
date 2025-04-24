@@ -1,0 +1,104 @@
+/* Prevent scrollbars and layout shifting */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* prevents white border caused by scroll */
+    background: black; /* fallback behind image */
+  }
+  
+  
+  .page-title {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: black;
+    color: white;
+    font-size: 1.8rem;
+    padding: 1rem 0;
+    text-align: center;
+    font-weight: bold;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background: url('https://image.fonwall.ru/o/ts/aprilia-red-theme-wallpaper-racing-bike-motorcycles-and-bicycles.jpeg?auto=compress&fit=crop&w=2560&h=1440&domain=img3.fonwall.ru') no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    position: fixed; /* key: prevent resizing artifacts */
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+  
+  
+  .auth-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .auth-card input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin: 0.75rem 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+  }
+  
+  .auth-card input::placeholder {
+    color: #666;
+  }
+  
+  .auth-card button {
+    width: 100%;
+    padding: 0.85rem;
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background 0.3s;
+  }
+  
+  .auth-card button:hover {
+    background-color: #303f9f;
+  }
+  
+  .toggle-mode {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #ddd;
+  }
+  
+  .toggle-mode a {
+    color: #fff;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .error {
+    margin-top: 1rem;
+    color: #ff6b6b;
+    font-size: 0.9rem;
+  }
+
+  .auth-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: white; /* ✅ white login text */
+  }
+  
+  
