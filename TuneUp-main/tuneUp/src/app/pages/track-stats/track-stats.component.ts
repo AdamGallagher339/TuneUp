@@ -173,6 +173,24 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
   
       // Animate chart appearance.
       this.chart.appear(1000, 100);
+
+       // ---- SIMULATION CODE ----
+    // For testing: simulate gauge pointer movement from 0 to 200 repeatedly.
+    let testValue = 0;
+    setInterval(() => {
+      // Increase testValue; reset to 0 if it exceeds 200.
+      if (testValue > 200) {
+        testValue = 0;
+      }
+      // Animate the gauge pointer to the test value.
+      this.axisDataItem.animate({
+        key: "value",
+        to: testValue,
+        duration: 800,
+        easing: am5.ease.out(am5.ease.cubic)
+      });
+      testValue += 20; // Increment test value for next update.
+    }, 1000);
     });
   }
 
