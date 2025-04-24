@@ -1,21 +1,21 @@
-<div class="settings-container">
-  <div class="top-banner" *ngIf="toastText">
-    {{ toastText }}
-  </div>
+<div class="settings-wrapper">
+  <div class="settings-background"></div>
 
-  <div class="page-title">⚙️ App Settings</div>
+  <div class="settings-grid">
+    <!-- Controls Section -->
+    <div class="settings-card left-card">
+      <h2>🎮 Controls</h2>
+      <p><button (click)="restartSensors()">Restart Sensors</button></p>
+      <p><button (click)="zeroLeanAngle()">Zero Lean Angle</button></p>
+      <p><button (click)="resetSensorData()">Reset Sensor Data</button></p>
+    </div>
 
-  <div class="settings-card">
-    <h2>Controls</h2>
-
-    <button class="save-btn" (click)="restartSensors()">Restart Sensors</button>
-    <button class="save-btn" (click)="zeroLeanAngle()">Zero Lean Angle</button>
-    <button class="save-btn" (click)="resetSensorData()">Reset Sensor Data</button>
-
-    <hr style="margin: 2rem 0; border-color: #fff3;">
-
-    <button class="logout-btn" (click)="logout()">Logout</button>
-    <button class="save-btn" (click)="changePassword()">Change Password</button>
-    <button class="danger-btn" (click)="deleteAccount()"> Delete Account</button>
+    <!-- Account Section -->
+    <div class="settings-card right-card">
+      <h2>👤 Account</h2>
+      <p><button (click)="logout()" class="warn">Logout</button></p>
+      <p><button (click)="changePassword()">Change Password</button></p>
+      <p><button (click)="deleteAccount()" class="danger">Delete Account</button></p>
+    </div>
   </div>
 </div>
