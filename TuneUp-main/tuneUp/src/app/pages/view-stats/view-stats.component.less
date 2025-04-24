@@ -1,3 +1,16 @@
+@primary-color: #e60000;       // Main red accent (adjust as needed)
+@secondary-color: #0d0d0d;     // Near-black background
+@accent-color: #692332;        // Button accent color
+@success-color: #4caf50;
+@error-color: #f44336;
+@warning-color: #ff9800;
+
+@background-overlay: rgba(0, 0, 0, 0.6);
+@card-bg: rgba(255, 255, 255, 0.08);
+@light-text: #fff;
+@muted-text: #eee;
+
+
 /* Wrapper to remove horizontal scroll */
 .view-stats-wrapper {
   position: relative;
@@ -38,6 +51,61 @@
   overflow-x: hidden;
   width: 100%;
 }
+
+button {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  background-color: @accent-color;
+  color: @light-text;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  
+  &:hover {
+    background-color: darken(@accent-color, 10%);
+    transform: translateY(-2px);
+  }
+  
+  &:disabled {
+    background-color: #444;
+    cursor: not-allowed;
+  }
+  
+  &:focus {
+    outline: 2px solid lighten(@accent-color, 20%);
+    outline-offset: 2px;
+  }
+}
+
+.test-delete-button {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #03a9f4;
+  color: @light-text;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  
+  &:hover {
+    background-color: darken(#03a9f4, 10%);
+    transform: translateY(-2px);
+  }
+  
+  &:disabled {
+    background-color: #444;
+    cursor: not-allowed;
+  }
+  
+  &:focus {
+    outline: 2px solid lighten(@accent-color, 20%);
+    outline-offset: 2px;
+  }
+}
+
 
 /* Two-column wrapper */
 .stats-columns {

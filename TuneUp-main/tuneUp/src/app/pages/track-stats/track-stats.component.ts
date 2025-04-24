@@ -327,4 +327,18 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sensorService.stopTracking();
     clearInterval(this.timerInterval);
   }
+
+  //make the timer change from seconds to minutes and seconds after 60 seconds
+  public get formattedTimer(): string {
+    if (this.timer < 60) {
+      return `${this.timer} sec`;
+    } else {
+      const minutes = Math.floor(this.timer / 60);
+      const seconds = this.timer % 60;
+      
+      const secondsStr = seconds < 10 ? '0' + seconds : seconds;
+      return `${minutes} min ${secondsStr} sec`;
+    }
+  }
+  
 }

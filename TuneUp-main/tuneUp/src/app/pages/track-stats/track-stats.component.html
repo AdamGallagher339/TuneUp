@@ -17,29 +17,37 @@
     </section>
 
     <!-- Live Data -->
-    <section *ngIf="isTracking" class="live-data">
-      <h2>Live Data</h2>
-      <div>Timer: {{ timer }} seconds</div>
-      <div>Speed: {{ currentSpeed | number:'1.0-0' }} km/h</div>
-      <div>Lean: {{ currentLean | number:'1.0-0' }}°</div>
-      <div>G-Force: {{ currentGForce | number:'1.1-1' }} g</div>
-    </section>
+    <div class="live-data-popup" *ngIf="isTracking" role="dialog" aria-modal="true">
+      <div class="live-data-content">
+        <h2>Live Data</h2>
+        <div>Timer: {{ formattedTimer }}</div>
+        <div>Speed: {{ currentSpeed | number:'1.0-0' }} km/h</div>
+        <div>Lean: {{ currentLean | number:'1.0-0' }}°</div>
+        <div>G-Force: {{ currentGForce | number:'1.1-1' }} g</div>
+        <br>
+        <br>
+
+        <button class="end-test-button" (click)="toggleTracking()" >End Session</button>
+      </div>
+    </div>
 
     <!-- Session Summary -->
-    <section *ngIf="sessionStats && !isTracking" class="session-stats">
-      <h2>Session Summary</h2>
-      <ul>
-        <li>Duration: {{ sessionStats?.elapsed }} s</li>
-        <li>Top Speed: {{ sessionStats?.topSpeed | number:'1.0-0' }} km/h</li>
-        <li>Avg Speed: {{ sessionStats?.averageSpeed | number:'1.0-0' }} km/h</li>
-        <li>Highest Lean angle: {{ sessionStats?.maxLean | number:'1.0-0' }}°</li>
-        <li>Highest G-Force: {{ sessionStats?.topGForce | number:'1.1-1' }} g</li>
-      </ul>
-      <div class="session-actions">
-        <button (click)="saveSession()" class="save-button">Save Session</button>
-        <button (click)="discardSession()" class="discard-button">Discard</button>
-      </div>
-    </section>
+    <div *ngIf="sessionStats && !isTracking" class="session-popup" role="dialog" aria-modal="true">
+      <section class="session-stats">
+        <h2>Session Summary</h2>
+        <ul>
+          <li>Duration: {{ sessionStats?.elapsed }} s</li>
+          <li>Top Speed: {{ sessionStats?.topSpeed | number:'1.0-0' }} km/h</li>
+          <li>Avg Speed: {{ sessionStats?.averageSpeed | number:'1.0-0' }} km/h</li>
+          <li>Highest Lean angle: {{ sessionStats?.maxLean | number:'1.0-0' }}°</li>
+          <li>Highest G-Force: {{ sessionStats?.topGForce | number:'1.1-1' }} g</li>
+        </ul>
+        <div class="session-actions">
+          <button (click)="saveSession()" class="save-button">Save Session</button>
+          <button (click)="discardSession()" class="discard-button">Discard</button>
+        </div>
+      </section>
+    </div>
 
     <!-- Test Popup -->
     <div class="test-popup" *ngIf="showTestPopup" role="dialog" aria-modal="true">

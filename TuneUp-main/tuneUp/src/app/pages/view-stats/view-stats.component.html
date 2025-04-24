@@ -14,11 +14,29 @@
             <div *ngIf="sessions.length > 0; else noSessions">
               <div class="stat-card session" *ngFor="let stat of sessions">
                 <h2>{{ stat.startTime?.toDate?.() | date: 'medium' }}</h2>
-                <p><strong>Top Speed:</strong> {{ stat.topSpeed }} km/h</p>
-                <p><strong>Average Speed:</strong> {{ stat.averageSpeed }} km/h</p>
-                <p><strong>Max Lean:</strong> {{ stat.maxLean }}°</p>
-                <p><strong>Elapsed Time:</strong> {{ stat.elapsed }} sec</p>
-                <p><strong>Top G-Force:</strong> {{ stat.topGForce }} g</p>
+                <p>
+                <strong>Top Speed:</strong>               
+                {{ stat.topSpeed | number:'1.0-0' }} km/h
+              </p>
+              <p>
+                <strong>Average Speed:</strong>
+                {{ stat.averageSpeed | number:'1.0-0' }} km/h
+              </p>
+              <p>
+                <strong>Max Lean:</strong>
+                {{ stat.maxLean | number:'1.2-2' }}°
+              </p>
+              <p>
+                <strong>Elapsed Time:</strong>
+                {{ stat.elapsed | formatDuration }}
+              </p>
+              <p>
+                <strong>Top G-Force:</strong>
+                {{ stat.topGForce }} g
+              </p>
+              <button (click)="deleteSession(stat.id)" class="button">
+                <strong>Delete Session</strong>
+              </button>
               </div>
             </div>
           </ng-container>
@@ -34,9 +52,12 @@
             <div *ngIf="tests.length > 0; else noTests">
               <div class="stat-card test" *ngFor="let test of tests">
                 <h2>{{ test.date?.toDate?.() | date: 'medium' }}</h2>
-                <p><strong>Acceleration:</strong> {{ test.acceleration }} m/s²</p>
-                <p><strong>Distance:</strong> {{ test.distance }} m</p>
+                <p><strong>Acceleration:</strong> {{ test.acceleration| number:'1.2-2' }} m/s²</p>
+                <p><strong>Distance:</strong> {{ test.distance| number:'1.2-2' }} m</p>
                 <p><strong>Time:</strong> {{ test.time }} sec</p>
+                <button (click)="deleteTest(test.id)" class="test-delete-button">
+                  Delete Test
+                </button>
               </div>
             </div>
           </ng-container>
