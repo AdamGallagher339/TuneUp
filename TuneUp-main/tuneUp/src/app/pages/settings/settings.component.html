@@ -1,6 +1,8 @@
 <div class="settings-wrapper">
   <div class="settings-background"></div>
-
+  <div class="top-banner" *ngIf="toastText">
+    {{ toastText }}
+  </div>
   <div class="settings-grid">
     <!-- Controls Section -->
     <div class="settings-card left-card">

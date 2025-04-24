@@ -33,6 +33,27 @@
   max-width: 1000px;
   width: 100%;
 }
+.top-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #4caf50; /* Green */
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-weight: bold;
+  z-index: 1000;
+  animation: slideDownUp 2.5s ease-in-out;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideDownUp {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { transform: translateY(0); opacity: 1; }
+  90% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100%); opacity: 0; }
+}
 
 .settings-card {
   background: rgba(0, 0, 0, 0.5);
