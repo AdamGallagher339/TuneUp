@@ -20,6 +20,7 @@ interface SessionStats {
   averageSpeed: number;
   maxLean: number;
   averageLean: number;
+  topGForce: number;
   elapsed?: number;
 }
 
@@ -181,6 +182,7 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.sessionStats.topSpeed = Math.max(this.sessionStats.topSpeed, this.currentSpeed);
     this.sessionStats.maxLean = Math.max(this.sessionStats.maxLean, this.currentLean);
+    this.sessionStats.topGForce = Math.max(this.sessionStats.topGForce || 0, this.currentGForce); // Update top G-force
     this.sessionStats.averageLean =
       (this.sessionStats.averageLean * (this.sessionStats.elapsed || 0) + this.currentLean) /
       ((this.sessionStats.elapsed || 0) + 1);
@@ -191,7 +193,6 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
       (Date.now() - this.sessionStats.startTime.getTime()) / 1000
     );
   }
-  
   public toggleTracking() {
     this.isTracking = !this.isTracking;
     if (this.isTracking) {
@@ -219,6 +220,7 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
       averageSpeed: 0,
       maxLean: 0,
       averageLean: 0,
+      topGForce: 0, // Initialize top G-force
       elapsed: 0,
     };
   }
@@ -305,6 +307,7 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     this.resetSession();
   }
+  
   
   public discardSession() {
     this.resetSession();

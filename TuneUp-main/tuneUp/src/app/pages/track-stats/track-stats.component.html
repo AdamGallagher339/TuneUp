@@ -32,7 +32,8 @@
         <li>Duration: {{ sessionStats?.elapsed }} s</li>
         <li>Top Speed: {{ sessionStats?.topSpeed | number:'1.0-0' }} km/h</li>
         <li>Avg Speed: {{ sessionStats?.averageSpeed | number:'1.0-0' }} km/h</li>
-        <li>Max Lean: {{ sessionStats?.maxLean | number:'1.0-0' }}°</li>
+        <li>Highest Lean angle: {{ sessionStats?.maxLean | number:'1.0-0' }}°</li>
+        <li>Highest G-Force: {{ sessionStats?.topGForce | number:'1.1-1' }} g</li>
       </ul>
       <div class="session-actions">
         <button (click)="saveSession()" class="save-button">Save Session</button>
