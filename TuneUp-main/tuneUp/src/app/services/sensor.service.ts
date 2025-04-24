@@ -150,7 +150,6 @@ export class sensorService {
   // Emit the current sensor reading to subscribers and write it to Firestore.
   public emitState(): void {
     this.liveData.next({ ...this.currentState });
-    this.saveReading({ ...this.currentState });
   }
 
   public async requestSensorPermissions(): Promise<void> {
