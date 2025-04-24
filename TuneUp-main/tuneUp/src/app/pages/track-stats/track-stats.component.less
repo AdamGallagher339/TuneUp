@@ -4,9 +4,9 @@
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-/* Full blurred background */
 .track-stats-background {
   position: fixed;
   top: 0;
@@ -14,25 +14,173 @@
   height: 100%;
   width: 100%;
   background: linear-gradient(
-      rgba(0, 0, 0, 0.6),
-      rgba(0, 0, 0, 0.6)
-    ),
-    url('https://image.fonwall.ru/o/ts/aprilia-red-theme-wallpaper-racing-bike-motorcycles-and-bicycles.jpeg?auto=compress&fit=crop&w=2560&h=1440&domain=img3.fonwall.ru')
+    rgba(0, 0, 0, 0.6),
+    rgba(0, 0, 0, 0.6)
+  ), url('https://image.fonwall.ru/o/ts/aprilia-red-theme-wallpaper-racing-bike-motorcycles-and-bicycles.jpeg?auto=compress&fit=crop&w=2560&h=1440&domain=img3.fonwall.ru')
     no-repeat center center;
   background-size: cover;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background-attachment: fixed;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: -1;
 }
 
-/* Main content container */
 .track-stats-container {
   min-height: 100vh;
   padding: 100px 20px 140px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-sizing: border-box;
-  z-index: 1;
+  color: white;
+}
+
+h1, h2 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+#chartdiv {
   width: 100%;
+  height: 300px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  margin-bottom: 2rem;
+}
+
+/* Control buttons */
+.session-controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+/* Cards: Live and Summary */
+.live-data, .session-stats {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 100%;
+  margin-bottom: 2rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  color: #fff;
+}
+
+.live-data div, .session-stats div {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  text-align: center;
+  color: #eee;
+}
+
+.session-actions, .test-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+button {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #03a9f4;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background-color: #0288d1;
+}
+
+button:disabled {
+  background-color: #444;
+  cursor: not-allowed;
+}
+
+.save-button {
+  background-color: #4caf50;
+}
+.save-button:hover {
+  background-color: #388e3c;
+}
+
+.discard-button {
+  background-color: #f44336;
+}
+.discard-button:hover {
+  background-color: #c62828;
+}
+
+.end-test-button {
+  background-color: #ff9800;
+}
+.end-test-button:hover {
+  background-color: #ef6c00;
+}
+
+/* Popup modal */
+.test-popup {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.test-content {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.test-content h2 {
+  margin-bottom: 1rem;
+}
+
+.test-content div {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #ddd;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .track-stats-container {
+    padding: 60px 15px 100px;
+  }
+
+  #chartdiv {
+    height: 250px;
+  }
+
+  .test-content {
+    padding: 1.2rem;
+  }
 }
