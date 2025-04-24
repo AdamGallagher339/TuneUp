@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 @Component({
   selector: 'app-track-stats',
@@ -9,6 +11,8 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./track-stats.component.less']
 })
 export class TrackStatsComponent {
+  private db = getFirestore();
+
   isTracking = false;
   showTestPopup = false;
   testActive = false;
@@ -37,7 +41,8 @@ export class TrackStatsComponent {
         elapsed: this.timer,
         topSpeed: 121,
         averageSpeed: 87,
-        maxLean: 42
+        maxLean: 42,
+        endTime: new Date()
       };
     }
   }
@@ -46,9 +51,23 @@ export class TrackStatsComponent {
     this.sessionStats = null;
   }
 
-  saveSession() {
-    if (!this.sessionStats) return;
-    console.log('Saving session:', this.sessionStats);
+  public async saveSession() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user || !this.sessionStats) return;
+
+    // Save session data to: users/{user.uid}/sessions/{timestamp}
+    const sessionDoc = doc(this.db, `users/${user.uid}/sessions`, Date.now().toString());
+    try {
+      await setDoc(sessionDoc, {
+        ...this.sessionStats,
+        endTime: this.sessionStats.endTime || new Date(),
+      });
+      console.log('Session data saved successfully!');
+      this.resetSession();
+    } catch (error) {
+      console.error('Error saving session data:', error);
+    }
   }
 
   startTestPopup() {
@@ -104,23 +123,37 @@ export class TrackStatsComponent {
   }
 
   discardTest() {
-    this.testStats = null;
-    this.showTestPopup = false;
+    this.resetTest();
   }
 
-  saveTest() {
-    if (!this.testStats) {
-      console.warn('No test data to save.');
+  public async saveTest() {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user || !this.testStats) {
+      console.warn('No test data to save or user not authenticated.');
       return;
     }
 
-    this.savingTest = true;
-    console.log('Saving test:', this.testStats);
+    const testDoc = doc(this.db, `users/${user.uid}/tests`, Date.now().toString());
+    try {
+      await setDoc(testDoc, { ...this.testStats });
+      console.log('Test data saved successfully!');
+      this.resetTest();
+    } catch (error) {
+      console.error('Error saving test data:', error);
+    }
+  }
 
-    setTimeout(() => {
-      this.savingTest = false;
-      this.showTestPopup = false;
-      this.testStats = null;
-    }, 1500);
+  private resetSession() {
+    this.sessionStats = null;
+    this.timer = 0;
+    this.isTracking = false;
+  }
+
+  private resetTest() {
+    this.testStats = null;
+    this.showTestPopup = false;
+    this.testActive = false;
+    this.hit100 = false;
   }
 }
