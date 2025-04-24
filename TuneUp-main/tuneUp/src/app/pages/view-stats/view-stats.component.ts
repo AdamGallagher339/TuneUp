@@ -58,4 +58,19 @@ export class ViewStatsComponent implements OnInit {
       console.error('Error deleting session:', err);
     }
   }
+
+  public async deleteTest(testId: string) {
+    if (!this.user) {
+      return;
+    }
+    if (!confirm('Are you sure you want to delete this test?')) {
+      return;
+    }
+    try {
+      const testDoc = doc(this.firestore, `users/${this.user.uid}/tests`, testId);
+      await deleteDoc(testDoc);
+    } catch (err) {
+      console.error('Error deleting test:', err);
+    }
+  }
 }

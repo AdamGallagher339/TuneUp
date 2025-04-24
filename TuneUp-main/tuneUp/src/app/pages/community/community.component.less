@@ -1,17 +1,30 @@
+@primary-color: #e60000;       // Main red accent (adjust as needed)
+@secondary-color: #0d0d0d;     // Near-black background
+@accent-color: #692332;        // Button accent color
+@success-color: #4caf50;
+@error-color: #f44336;
+@warning-color: #ff9800;
+
+@background-overlay: rgba(0, 0, 0, 0.6);
+@card-bg: rgba(255, 255, 255, 0.08);
+@light-text: #fff;
+@muted-text: #eee;
+
+/* Main container takes up the full viewport with your background image */
 .community-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    width: 100vw;
-    background: url('https://image.fonwall.ru/o/ts/aprilia-red-theme-wallpaper-racing-bike-motorcycles-and-bicycles.jpeg?auto=compress&fit=crop&w=2560&h=1440&domain=img3.fonwall.ru') no-repeat center center;
-    background-size: cover;
-    background-attachment: fixed;
-    position: fixed;
-    padding-top: 80px;
-    box-sizing: border-box;
-    top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  width: 100%;
+  background: url('https://image.fonwall.ru/o/ts/aprilia-red-theme-wallpaper-racing-bike-motorcycles-and-bicycles.jpeg?auto=compress&fit=crop&w=2560&h=1440&domain=img3.fonwall.ru') no-repeat center center;
+  background-size: cover;
+  background-attachment: fixed;
+  position: fixed;
+  box-sizing: border-box;
+  padding-top: 80px;
+  top: 0;
     left: 0;
     z-index: 0;
   }
@@ -35,14 +48,13 @@
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    padding: 2rem; /* ⬅️ smaller padding */
-    border-radius: 50px;
+    padding: 3rem;
+    border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-    width: 500px; /* ⬅️ reduced from 400px */
-    max-width: 90%;
+    width: 90%;
+    max-width: 1000px;
     text-align: center;
-    color: #ffffff;
-    margin-top: 80px;
+    color: #fff;
   }
   
   .community-card h2 {
@@ -60,7 +72,7 @@
   .user-card {
     background: rgba(255, 255, 255, 0.2);
     padding: 1.5rem;
-    border-radius: 16px;
+    border-radius: 8px;
     width: 250px;
     text-align: center;
     color: #fff;
@@ -156,18 +168,13 @@
     color: #fff;
   }
   
-  .stat-card.session::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 4px;
-    background: #03a9f4;
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
+  .event-card {
+    font-size: 0.9rem;
+    padding: 10px;
   }
   
-  
-   
-  
+  button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}
