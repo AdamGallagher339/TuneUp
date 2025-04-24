@@ -1,0 +1,147 @@
+/* Full page wrapper */
+.view-stats-wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+}
+
+/* Blurred background */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.7),
+      rgba(0, 0, 0, 0.7)
+    ),
+    url('https://image.fonwall.ru/o/ts/aprilia-red-theme-wallpaper-racing-bike-motorcycles-and-bicycles.jpeg?auto=compress&fit=crop&w=2560&h=1440&domain=img3.fonwall.ru')
+    no-repeat center center;
+  background-size: cover;
+  background-attachment: fixed;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: -1;
+}
+
+/* Scrollable content area */
+.stats-container {
+  min-height: 100vh;
+  padding: 100px 20px 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  color: white;
+  z-index: 1;
+}
+
+/* Columns layout */
+.stats-columns {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 2rem;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Column container */
+.stats-column {
+  flex: 1 1 450px;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .stats-columns {
+    flex-wrap: nowrap;
+  }
+
+  .stats-column {
+    width: 50%;
+  }
+
+  .stats-column h1 {
+    text-align: left;
+    width: 100%;
+  }
+}
+
+.stats-column h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+/* Stat card base */
+.stat-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 1.5rem 1.5rem 1.5rem 1.25rem;
+  margin: 1rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  overflow: hidden;
+}
+
+/* Smaller ride session cards */
+.stat-card.session {
+  max-width: 340px;
+}
+
+/* Red accent for ride sessions */
+.stat-card.session::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 4px;
+  background: #f44336;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+/* Blue accent for speed tests */
+.stat-card.test::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 4px;
+  background: #03a9f4;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.stat-card h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.4rem;
+  color: white;
+}
+
+.stat-card p {
+  margin: 0.4rem 0;
+  color: #ddd;
+  font-size: 1rem;
+}
+
+.empty-msg {
+  font-size: 1.2rem;
+  margin-top: 2rem;
+  color: #bbb;
+  text-align: center;
+}
