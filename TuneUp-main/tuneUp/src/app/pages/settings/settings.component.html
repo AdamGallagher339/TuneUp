@@ -1,26 +1,30 @@
-
-
-<div class="settings-wrapper">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <div class="settings-background"></div>
-  <div class="top-banner" *ngIf="toastText">
-    {{ toastText }}
-  </div>
-  <div class="settings-grid">
-    <!-- Controls Section -->
-    <div class="settings-card left-card">
-      <h2>🎮 Controls</h2>
-      <p><button (click)="restartSensors()">Restart Sensors</button></p>
-      <p><button (click)="zeroLeanAngle()">Zero Lean Angle</button></p>
-      <p><button (click)="resetSensorData()">Reset Sensor Data</button></p>
+<!-- Scroll wrapper to ensure scroll works -->
+<div style="max-height: 100vh; overflow-y: auto;">
+  <div class="settings-wrapper">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <div class="settings-background"></div>
+    
+    <div class="top-banner" *ngIf="toastText">
+      {{ toastText }}
     </div>
+    
+    <div class="settings-grid">
+      <!-- Controls Section -->
+      <div class="settings-card left-card">
+        <h2>🎮 Controls</h2>
+        <p><button (click)="restartSensors()">Restart Sensors</button></p>
+        <p><button (click)="zeroLeanAngle()">Zero Lean Angle</button></p>
+        <p><button (click)="resetSensorData()">Reset Sensor Data</button></p>
+      </div>
 
-    <!-- Account Section -->
-    <div class="settings-card right-card">
-      <h2>👤 Account</h2>
-      <p><button (click)="logout()" class="warn">Logout</button></p>
-      <p><button (click)="changePassword()">Change Password</button></p>
-      <p><button (click)="deleteAccount()" class="danger">Delete Account</button></p>
+      <!-- Account Section -->
+      <div class="settings-card right-card">
+        <h2>👤 Account</h2>
+        <p><button (click)="logout()" class="warn">Logout</button></p>
+        <p><button (click)="changePassword()">Change Password</button></p>
+        <p><button (click)="deleteAccount()" class="danger">Delete Account</button></p>
+      </div>
     </div>
   </div>
 </div>

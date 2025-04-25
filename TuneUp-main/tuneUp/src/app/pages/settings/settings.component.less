@@ -1,22 +1,29 @@
+/* Global box sizing reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #000;
+  overflow-x: hidden;
+  overflow-y: auto;
+  display: block;
+}
+
+/* Wrapper for the settings content */
 .settings-wrapper {
   position: relative;
   min-height: 100vh;
-  /* 
-    Adjust the bottom padding to account for:
-      - A base extra space (90px),
-      - Fixed bottom nav height (assumed 60px; change if needed), and 
-      - Device safe area (with a fallback value)
-  */
-  padding: 2rem 2rem calc(90px + 60px + env(safe-area-inset-bottom, 20px)) 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  overflow-y: auto;
+  height: auto;
+  padding: 2rem;
   overflow-x: hidden;
+  overflow-y: visible;
   z-index: 1;
-  
-  // Extra spacer to ensure the last element can scroll entirely into view 
+
   &::after {
     content: "";
     display: block;
@@ -25,6 +32,7 @@
   }
 }
 
+/* Background */
 .settings-background {
   position: fixed;
   top: 0;
@@ -37,50 +45,31 @@
   ), url('https://image.fonwall.ru/o/ts/aprilia-red-theme-wallpaper-racing-bike-motorcycles-and-bicycles.jpeg?auto=compress&fit=crop&w=2560&h=1440&domain=img3.fonwall.ru')
     no-repeat center center;
   background-size: cover;
-  background-attachment: fixed;
+  background-attachment: relative;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: -1;
+  pointer-events: none;
 }
 
-@media only screen and (max-width: 768px) {
-  .settings-grid {
-    grid-template-columns: 1fr !important;
-    gap: 1rem; // Optionally adjust the gap
-  }
-}
-
+/* Grid of cards */
 .settings-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
   gap: 2rem;
-  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
   width: 100%;
+  max-width: 1000px;
 }
 
-.top-banner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: #4caf50; /* Green */
-  color: white;
-  padding: 1rem;
-  text-align: center;
-  font-weight: bold;
-  z-index: 1000;
-  animation: slideDownUp 2.5s ease-in-out;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-@keyframes slideDownUp {
-  0% { transform: translateY(-100%); opacity: 0; }
-  10% { transform: translateY(0); opacity: 1; }
-  90% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(-100%); opacity: 0; }
-}
-
+/* Individual card */
 .settings-card {
+  width: 100%;
+  max-width: 400px;
+  flex: 1 1 300px;
   background: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(10px);
   border-radius: 1rem;
@@ -133,7 +122,48 @@
   }
 }
 
-/* Ensure all buttons inside settings cards take full width */
+/* Full width buttons inside cards */
 .settings-card button {
   width: 100%;
+}
+
+/* Top banner animation */
+.top-banner {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #4caf50;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-weight: bold;
+  z-index: 1000;
+  animation: slideDownUp 2.5s ease-in-out;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideDownUp {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { transform: translateY(0); opacity: 1; }
+  90% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100%); opacity: 0; }
+}
+
+/* Mobile responsiveness */
+@media only screen and (max-width: 768px) {
+  .settings-grid {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .settings-card {
+    width: 100%;
+    max-width: 90vw;
+  }
+
+  .settings-wrapper {
+    padding: 1rem;
+  }
 }
