@@ -1,11 +1,28 @@
 .settings-wrapper {
   position: relative;
   min-height: 100vh;
-  padding: 2rem;
+  /* 
+    Adjust the bottom padding to account for:
+      - A base extra space (90px),
+      - Fixed bottom nav height (assumed 60px; change if needed), and 
+      - Device safe area (with a fallback value)
+  */
+  padding: 2rem 2rem calc(90px + 60px + env(safe-area-inset-bottom, 20px)) 2rem;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1;
+  
+  // Extra spacer to ensure the last element can scroll entirely into view 
+  &::after {
+    content: "";
+    display: block;
+    height: calc(90px + 60px + env(safe-area-inset-bottom, 20px));
+    flex-shrink: 0;
+  }
 }
 
 .settings-background {
@@ -26,6 +43,13 @@
   z-index: -1;
 }
 
+@media only screen and (max-width: 768px) {
+  .settings-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem; // Optionally adjust the gap
+  }
+}
+
 .settings-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -33,6 +57,7 @@
   max-width: 1000px;
   width: 100%;
 }
+
 .top-banner {
   position: fixed;
   top: 0;
@@ -106,4 +131,9 @@
       }
     }
   }
+}
+
+/* Ensure all buttons inside settings cards take full width */
+.settings-card button {
+  width: 100%;
 }
