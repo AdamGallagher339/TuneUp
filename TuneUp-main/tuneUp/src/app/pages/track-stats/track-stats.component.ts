@@ -76,7 +76,9 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
   public savingTest: boolean = false;
 
   private destroy$ = new Subject<void>();
-
+  private nonZeroSpeedSum: number = 0;
+  private nonZeroSpeedCount: number = 0;
+  
   constructor(public sensorService: sensorService) {}
 
   ngOnInit() {
@@ -186,13 +188,18 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.sessionStats.averageLean =
       (this.sessionStats.averageLean * (this.sessionStats.elapsed || 0) + this.currentLean) /
       ((this.sessionStats.elapsed || 0) + 1);
-    this.sessionStats.averageSpeed =
-      (this.sessionStats.averageSpeed * (this.sessionStats.elapsed || 0) + this.currentSpeed) /
-      ((this.sessionStats.elapsed || 0) + 1);
+    
+      // Update average speed only if current speed is non-zero.
+    if (this.currentSpeed > 0) {
+      this.nonZeroSpeedSum += this.currentSpeed;
+      this.nonZeroSpeedCount++;
+      this.sessionStats.averageSpeed = this.nonZeroSpeedSum / this.nonZeroSpeedCount;
+    }
     this.sessionStats.elapsed = Math.floor(
       (Date.now() - this.sessionStats.startTime.getTime()) / 1000
     );
   }
+
   public toggleTracking() {
     this.isTracking = !this.isTracking;
     if (this.isTracking) {
@@ -223,6 +230,8 @@ export class TrackStatsComponent implements OnInit, AfterViewInit, OnDestroy {
       topGForce: 0, // Initialize top G-force
       elapsed: 0,
     };
+    this.nonZeroSpeedSum = 0;
+    this.nonZeroSpeedCount = 0;
   }
   
   // --- Test (0–100–0) Pop‑Down Functions ---
