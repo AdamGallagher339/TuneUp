@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { collection, getDocs, query, orderBy, deleteDoc, doc, setDoc, updateDoc, getDoc } from 'firebase/firestore';
 import { Firestore } from '@angular/fire/firestore';
 import { getAuth } from 'firebase/auth';
+import { Auth } from '@angular/fire/auth'; 
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import { FriendService } from '../../services/friend.service';
@@ -17,6 +18,7 @@ import { EventService } from '../../services/event.service';
   templateUrl: './community.component.html',
   styleUrls: ['./community.component.less']
 })
+
 export class CommunityComponent implements OnInit {
   users: any[] = [];
   currentUserId: string = '';
@@ -38,7 +40,7 @@ export class CommunityComponent implements OnInit {
     private friendService: FriendService,
     private eventService: EventService,
     private firestore: Firestore,
-    private router: Router
+    private router: Router,
   ) {}
 
   ngOnInit() {
@@ -55,7 +57,14 @@ export class CommunityComponent implements OnInit {
     const eventsRef = collection(this.firestore, 'events');
     const eventsQuery = query(eventsRef, orderBy('timestamp', 'desc'));
     getDocs(eventsQuery).then(snapshot => {
-      this.events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      this.events = snapshot.docs.map(docSnapshot => {
+        const data = docSnapshot.data();
+        return {
+          id: docSnapshot.id,
+          ...data,
+          isOwner: data['createdBy'] === this.currentUserId
+        };
+      });
     });
   }
 
@@ -113,7 +122,7 @@ export class CommunityComponent implements OnInit {
     return event.attendees?.includes(this.currentUserId);
   }
 
-  async joinRide(event: any) {
+  /*async joinRide(event: any) {
     if (!event.attendees) {
       event.attendees = [];
     }
@@ -134,7 +143,37 @@ export class CommunityComponent implements OnInit {
     } else {
       this.showToast('❗ You have already joined this ride');
     }
-  }
+  }*/
+
+    async joinRide(event: any) {
+      if (this.hasJoined(event)) {
+        // User already joined -> leave the ride
+        event.attendees = event.attendees.filter((id: string) => id !== this.currentUserId);
+    
+        try {
+          const eventRef = doc(this.firestore, `events/${event.id}`);
+          await updateDoc(eventRef, { attendees: event.attendees });
+          this.showToast('👋 Left the ride');
+          this.loadEvents();
+        } catch (error) {
+          console.error('Failed to leave ride:', error);
+          this.showToast('❌ Failed to leave ride');
+        }
+      } else {
+        // User not joined -> join the ride
+        event.attendees = event.attendees ? [...event.attendees, this.currentUserId] : [this.currentUserId];
+    
+        try {
+          const eventRef = doc(this.firestore, `events/${event.id}`);
+          await updateDoc(eventRef, { attendees: event.attendees });
+          this.showToast('✅ Joined the ride');
+          this.loadEvents();
+        } catch (error) {
+          console.error('Failed to join ride:', error);
+          this.showToast('❌ Failed to join ride');
+        }
+      }
+    }
 
   async rsvpToEvent(event: any) {
     if (event.attendees && event.attendees.includes(this.currentUserId)) {

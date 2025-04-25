@@ -28,11 +28,11 @@
             <p><strong>Location:</strong> {{ event.location }}</p>
             <p><strong>Date:</strong> {{ event.date }}</p>
             <p><strong>Joined Riders:</strong> {{ event.attendees?.length || 0 }}</p>
-            <button class="save-btn" (click)="joinRide(event)" [disabled]="hasJoined(event)">
-              {{ hasJoined(event) ? 'Joined' : 'Join Ride' }}
+            <button class="save-btn" (click)="joinRide(event)">
+              {{ hasJoined(event) ? 'Leave Ride' : 'Join Ride' }}
             </button>
             <br>
-            <button class="save-btn" (click)="deleteEvent(event.id)">🗑️ Delete</button>
+            <button *ngIf="event.isOwner" class="save-btn" (click)="deleteEvent(event.id)">🗑️ Delete</button>
           </div>
         </div>
         <ng-template #noEventTpl>
