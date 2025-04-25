@@ -20,6 +20,9 @@
     <div class="live-data-popup" *ngIf="isTracking" role="dialog" aria-modal="true">
       <div class="live-data-content">
         <h2>Live Data</h2>
+        <div class="test-warning">
+          DO NOT USE DEVICE WHILE OPERATING VEHICLE
+        </div>
         <div>Timer: {{ formattedTimer }}</div>
         <div>Speed: {{ currentSpeed | number:'1.0-0' }} km/h</div>
         <div>Lean: {{ currentLean | number:'1.0-0' }}°</div>
@@ -52,6 +55,10 @@
     <!-- Test Popup -->
     <div class="test-popup" *ngIf="showTestPopup" role="dialog" aria-modal="true">
       <div class="test-content">
+
+        <div class="test-warning">
+          DO NOT USE DEVICE WHILE OPERATING VEHICLE
+        </div>
         <h2>0–100–0 Test</h2>
         
         <!-- Live Test State -->
