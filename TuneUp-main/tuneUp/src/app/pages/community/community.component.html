@@ -28,7 +28,7 @@
             <p><strong>Location:</strong> {{ event.location }}</p>
             <p><strong>Date:</strong> {{ event.date }}</p>
             <p><strong>Joined Riders:</strong> {{ event.attendees?.length || 0 }}</p>
-            <button class="save-btn" (click)="joinRide(event)">
+            <button class="save-btn" (click)="joinRide(event)" [disabled]="event.isOwner">
               {{ hasJoined(event) ? 'Leave Ride' : 'Join Ride' }}
             </button>
             <br>
